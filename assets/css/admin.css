@@ -1,0 +1,147 @@
+/* Styling for text input blocks */
+.block-editor-block-list__layout 
+ .sesh-block 
+ .components-base-control {
+  margin-bottom: 2.5em;
+}
+.block-editor-block-list__layout 
+ .sesh-block 
+ .components-base-control
+ .components-base-control__help {
+  font-size: 1.125em;
+  margin-left: 1.75em;
+  margin-top: 0.5em;
+}
+.block-editor-block-list__layout 
+ .sesh-block 
+ .components-base-control 
+ .components-base-control__field {
+  margin-bottom: 0;
+  border: 1px solid lightgray;
+  border-radius: 0.25em;
+  padding: 1em 1.25em;
+  background: white;
+  font-size: 1.5em;
+  box-shadow: 0 10px 25px 2px rgba(0, 0, 0, 0.1);
+}
+
+.block-editor-block-list__layout 
+ .sesh-block 
+ .components-base-control 
+ .components-base-control__field 
+ .block-editor-rich-text__editable {
+  padding: 0;
+  margin-top: 1em;
+  font-size: 0.75em;
+  border-radius: 0;
+  border: none;
+  border-bottom: 2px solid lightgray;
+  padding-bottom: 3px;
+  color: #666666;
+  transition: border-bottom 0.1s, padding 0.1s;
+}
+
+.block-editor-block-list__layout 
+ .sesh-block 
+ .components-base-control 
+ .components-base-control__field 
+ .block-editor-rich-text__editable:focus {
+  padding-bottom: 6px;
+  border-bottom: 4px solid #1989c1;
+  color: black;
+  box-shadow: none;
+}
+.block-editor-block-list__layout 
+ .sesh-block 
+ .components-base-control 
+ .components-base-control__field 
+      input[type="text"]::placeholder {
+        color: rgba(0, 0, 0, 0.54);
+}
+
+.block-editor-block-list__layout 
+ .sesh-block 
+ .components-base-control 
+ .components-base-control__field 
+ .block-editor-rich-text__editable 
+ p {
+  margin: 8px 0 0 0 !important;
+}
+
+.block-editor-block-list__layout 
+ .sesh-block 
+ .components-base-control 
+ .components-base-control__field 
+ input[type="text"] {
+  padding: 0;
+  margin-top: 1em;
+  font-size: 0.75em;
+  border-radius: 0;
+  border: none;
+  border-bottom: 2px solid lightgray;
+  color: #666666;
+  transition: border-bottom 0.1s, padding 0.1s;
+}
+
+.block-editor-block-list__layout 
+ .sesh-block 
+ .components-base-control 
+ .components-base-control__field 
+ input[type="text"]:focus {
+  padding-bottom: 6px;
+  border-bottom: 4px solid #1989c1;
+  color: black;
+  box-shadow: none;
+}
+
+.block-editor-block-list__layout 
+ .sesh-block 
+ .components-base-control 
+ .components-base-control__field 
+      label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.block-editor-block-list__layout 
+ .sesh-block 
+ button.components-button.upload-button {
+  color: rgb(0, 124, 186);
+  font-size: 0.75em;
+  padding: 1.25em 1em;
+  border: 2px solid rgb(0, 124, 186);
+  transition: border 0.25s, color 0.25s, background 0.25s;
+}
+
+.block-editor-block-list__layout 
+ .sesh-block 
+ button.components-button.upload-button 
+ span {
+  margin-right: 0.2em;
+}
+
+.block-editor-block-list__layout 
+ .sesh-block 
+ button.components-button.upload-button:focus,
+.block-editor-block-list__layout 
+ .sesh-block 
+ button.components-button.upload-button:hover {
+  background: #1989c1 !important;
+  border: 2px solid #1989c1 !important;
+  color: white !important;
+  box-shadow: none !important;
+}
+
+.block-editor-block-list__layout 
+ .sesh-block 
+ img.uploaded-image-display {
+  max-width: 250px;
+  display: block;
+  margin: 1em 0;
+}
+
+.block-editor-block-list__layout 
+ .sesh-block 
+ .components-datetime__date {
+  border: none;
+}

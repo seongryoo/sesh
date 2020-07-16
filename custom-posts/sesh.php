@@ -1,0 +1,70 @@
+<?php
+
+// Register sessions post type
+function appia_register_sesh() {
+  $labels = array(
+    'name'                    => 'Sessions',
+    'singular_name'           => 'Session',
+    'menu_name'               => 'Sessions',
+    'name_admin_bar'          => 'Session',
+    'add_new'                 => 'Add New',
+    'add_new_item'            => 'Add New Session',
+    'new_item'                => 'New Session',
+    'edit_item'               => 'Edit Session',
+    'view_item'               => 'View Session',
+    'all_items'               => 'All Sessions',
+    'not_found'               => 'No sessions found.',
+    'not_found_in_trash'      => 'No sessions found in Trash.',
+    'archives'                => 'Session archives',
+    'filter_items_list'       => 'Filter sessions list',
+    'items_list_navigation'   => 'Sessions list navigation',
+    'items_list'              => 'Sessions list',
+  );
+
+  $args = array(
+    'labels'                  => $labels,
+    'public'                  => true,
+    'menu_icon'               => 'dashicons-desktop',
+    'show_in_rest'            => true,
+    'publicly_queryable'      => true,
+  );
+
+  register_post_type( 'post_sesh', $args );
+
+  $supports = array(
+    'custom-fields',
+  );
+  add_post_type_support( 'post_sesh', $supports );
+}
+add_action( 'init', 'appia_register_sesh' );
+
+// Register custom meta
+function appia_register_sesh_meta() {
+  $single = array(
+    'show_in_rest'            => true,
+    'single'                  => true,
+    'type'                    => 'string',
+  );
+
+  $multi = array(
+    'show_in_rest'            => true,
+    'single'                  => false,
+    'type'                    => 'string',
+  );
+
+  register_post_meta( 'post_sesh', 'post_sesh_meta_name', $single );
+  register_post_meta( 'post_sesh', 'post_sesh_meta_speakers', $single );
+  register_post_meta( 'post_sesh', 'post_sesh_meta_desc', $single );
+  register_post_meta( 'post_sesh', 'post_sesh_meta_link', $single );
+}
+add_action( 'init', 'appia_register_sesh_meta' );
+
+function appia_register_sesh_data_block_template() {
+  $sesh_object = get_post_type_object( 'post_sesh' );
+  $sesh_object->template = array(
+    array( 'appia/sesh-data' ),
+  );
+  $sesh_object->template_lock = 'all';
+}
+
+add_action( 'init', 'appia_register_sesh_data_block_template' );

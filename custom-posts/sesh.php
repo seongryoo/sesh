@@ -52,7 +52,6 @@ function appia_register_sesh_meta() {
     'type'                    => 'string',
   );
 
-  register_post_meta( 'post_sesh', 'post_sesh_meta_name', $single );
   register_post_meta( 'post_sesh', 'post_sesh_meta_speakers', $single );
   register_post_meta( 'post_sesh', 'post_sesh_meta_desc', $single );
   register_post_meta( 'post_sesh', 'post_sesh_meta_link', $single );

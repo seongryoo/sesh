@@ -3,22 +3,12 @@
   const registerBlock = wp.blocks.registerBlockType;
   const TextControl = wp.components.TextControl;
   const seshEdit = function(props) {
-    // Session name
-    const nameArgs = {
-      onChange: function(value) {
-        props.setAttributes({name: value});
-      },
-      label: 'Session name:',
-      placeholder: 'e.g. "Panel: Environmental justice during a pandemic"',
-      value: props.attributes.name,
-    };
-    const name = el(TextControl, nameArgs);
     // Session link
     const linkArgs = {
       onChange: function(value) {
         props.setAttributes({link: value});
       },
-      label: 'Link to session videos/files',
+      label: 'Link to session videos/files:',
       placeholder: 'Enter a URL...',
       value: props.attributes.link,
     };
@@ -76,7 +66,7 @@
         {
           className: 'sesh-block',
         },
-        [name, link, speakers, descWrapped]
+        [link, speakers, descWrapped]
     );
   };
 
@@ -85,11 +75,6 @@
     category: 'appia-blocks',
     icon: 'calendar-alt',
     attributes: {
-      name: {
-        type: 'string',
-        source: 'meta',
-        meta: 'post_sesh_meta_name',
-      },
       speakers: {
         type: 'string',
         source: 'meta',

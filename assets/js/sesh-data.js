@@ -22,6 +22,7 @@
       help: 'Enter a list of names separated by commas.',
       placeholder: 'e.g. "Lorraine Hansberry, June Jordan"',
       value: props.attributes.speakers,
+      className: 'helper-label',
     };
     const speakers = el(TextControl, speakersArgs);
     // Description field

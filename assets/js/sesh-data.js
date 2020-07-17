@@ -3,6 +3,24 @@
   const registerBlock = wp.blocks.registerBlockType;
   const TextControl = wp.components.TextControl;
   const seshEdit = function(props) {
+    // Helper method that generates appia field wrapper
+    const elWrap = function(element, args, value) {
+      let generatedElement;
+      if (arguments.length == 3) {
+        generatedElement = el(element, args, value);
+      } else if (arguments.length == 2) {
+        generatedElement = el(element, args);
+      } else if (arguments.length == 1) {
+        generatedElement = el(element);
+      }
+      return el(
+          'div',
+          {
+            className: 'appia-field-block',
+          },
+          generatedElement
+      );
+    };
     // Session link
     const linkArgs = {
       onChange: function(value) {
@@ -10,10 +28,10 @@
       },
       label: 'Link to session videos/files:',
       placeholder: 'Enter a URL...',
+      className: 'appia-input__text',
       value: props.attributes.link,
     };
-    const link = el(TextControl, linkArgs);
-    // Speakers list
+    const link = elWrap(TextControl, linkArgs);
     const speakersArgs = {
       onChange: function(value) {
         props.setAttributes({speakers: value});
@@ -22,9 +40,8 @@
       help: 'Enter a list of names separated by commas.',
       placeholder: 'e.g. "Lorraine Hansberry, June Jordan"',
       value: props.attributes.speakers,
-      className: 'helper-label',
     };
-    const speakers = el(TextControl, speakersArgs);
+    const speakers = elWrap(TextControl, speakersArgs);
     // Description field
     const descArgs = {
       onChange: function(value) {
@@ -32,7 +49,7 @@
       },
       value: props.attributes.desc,
       multiline: true,
-      className: 'sesh-description',
+      className: 'appia-input__rich-text',
       id: 'sesh-desc',
       placeholder: 'Start typing...',
     };
@@ -47,25 +64,26 @@
         },
         'Session description:'
     );
-    const descLabelled = el(
-        'div',
-        {
-          className: 'components-base-control__field',
-        },
-        [descLabel, desc]
-    );
-    const descWrapped = el(
-        'div',
-        {
-          className: 'components-base-control sesh-description-block',
-        },
-        descLabelled
-    );
+    const descWrapped = elWrap('div', {}, [descLabel, desc]);
+    // const descLabelled = el(
+    //     'div',
+    //     {
+    //       className: 'appi-field appia-field-text',
+    //     },
+    //     [descLabel, desc]
+    // );
+    // const descWrapped = el(
+    //     'div',
+    //     {
+    //       className: 'appia-field-wrapper appia-field-desc',
+    //     },
+    //     descLabelled
+    // );
     // The final element
     return el(
         'div',
         {
-          className: 'sesh-block',
+          className: 'appia-blocks',
         },
         [link, speakers, descWrapped]
     );

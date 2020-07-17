@@ -19,7 +19,7 @@
     };
     // Slot name
     let currSlotName = '';
-    const slotNameArgs = {
+    const addSlotNameArgs = {
       onChange: function(value) {
         currSlotName = value;
       },
@@ -27,7 +27,7 @@
       placeholder: 'Start typing...',
       label: 'Time slot name (can be left blank)',
     };
-    const slotName = el(TextControl, slotNameArgs);
+    const addSlotName = el(TextControl, addSlotNameArgs);
     // Add slot button
     const slotButtonArgs = {
       onClick: function(value) {
@@ -41,11 +41,17 @@
         form.value = currSlotName;
       },
     };
+    const addSlotButton = el(
+        Button,
+        slotButtonArgs,
+        'Add time slot'
+    );
+    // Display current slots
     const drawSlot = function(mult) {
       const slotsObj = getAttr('slots');
       const renderArr = [];
       for (const [index, slot] of slotsObj.entries()) {
-        const slotElement = el(
+        const slotNameEditable = el(
             TextControl,
             {
               'className': 'ungarnished',
@@ -57,10 +63,10 @@
               },
             }
         );
-        const closeButton = el(
+        const removeSlotButton = el(
             Button,
             {
-              'className': 'slot-button-close button-close',
+              'className': 'slot-button button-remove',
               'data-id': [index],
               'onClick': function() {
                 const indexString = event.target.getAttribute('data-id');
@@ -76,7 +82,7 @@
             {
               className: 'slot',
             },
-            [slotElement, closeButton]
+            [slotNameEditable, removeSlotButton]
         );
         renderArr.push(element);
       }
@@ -87,22 +93,18 @@
         {},
         drawSlot()
     );
-    const slotButton = el(
-        Button,
-        slotButtonArgs,
-        'Add time slot'
-    );
+
     const slotForm = el(
         'div',
         {
           className: 'sched-slot sched',
         },
-        [displaySlots, slotName, slotButton]
+        [addSlotName, addSlotButton, displaySlots]
     );
     return el(
         'div',
         {
-          className: 'appia-block',
+          className: 'appia-blocks',
         },
         [slotForm]
     );

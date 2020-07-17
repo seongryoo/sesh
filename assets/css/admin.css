@@ -79,116 +79,82 @@
 }
 
 /* Styling for text input blocks */
-.block-editor-block-list__layout 
- .appia-block 
- .components-base-control {
-  margin-bottom: 2.5em;
-  position: relative;
-}
-.block-editor-block-list__layout 
- .appia-block 
- .components-base-control
- .components-base-control__help {
-  font-size: 1.125em;
-  margin-left: 1.75em;
-  position: absolute;
-  bottom: 0;
-  margin-bottom: 1em;
+.appia-field-block .components-base-control__help {
+  margin: 0;
   color: #757575;
 }
-.block-editor-block-list__layout 
- .appia-block 
- .components-base-control 
- .components-base-control__field {
-  margin-bottom: 0;
+
+.appia-blocks .appia-field-block {
+  font-family: Segoe UI, sans-serif;
+  margin-bottom: 1em;
+  position: relative;
   border: none;
   border-radius: 0.5rem;
+  font-size: 1.25rem;
   padding: 1em 1.25em 1em 1.25em;
   background: white;
-  font-size: 1.5em;
   box-shadow: 0 10px 25px 2px rgba(0, 0, 0, 0.1);
 }
-.block-editor-block-list__layout 
- .appia-block 
- .components-base-control.helper-label
- .components-base-control__field {
-  padding: 1em 1.25em 3em 1.25em;
+
+.appia-blocks .appia-field-block label {
+  font-size: 1.5rem;
+}
+.appia-blocks .appia-field-block p,
+.appia-blocks .appia-field-block input {
+  font-size: 1rem;
 }
 
-.block-editor-block-list__layout 
- .appia-block 
- .components-base-control 
- .components-base-control__field 
- .block-editor-rich-text__editable {
-  padding: 0;
+.appia-input__rich-text {
   margin-top: 1em;
-  font-size: 0.75em;
   border-radius: 0;
   border: none;
   border-bottom: 2px solid lightgray;
-  padding-bottom: 3px;
+  padding-top: 6px;
+  padding-bottom: 0;
   color: #666666;
   transition: border-bottom 0.1s, padding 0.1s;
+  box-sizing: content-box;
 }
 
-.block-editor-block-list__layout 
- .appia-block 
- .components-base-control 
- .components-base-control__field 
- .block-editor-rich-text__editable:focus {
-  padding-bottom: 6px;
-  border-bottom: 4px solid #1989c1;
-  color: black;
-  box-shadow: none;
-}
-.block-editor-block-list__layout 
- .appia-block 
- .components-base-control 
- .components-base-control__field 
-      input[type="text"]::placeholder {
-        color: rgba(0, 0, 0, 0.54);
-}
-
-.block-editor-block-list__layout 
- .appia-block 
- .components-base-control 
- .components-base-control__field 
- .block-editor-rich-text__editable 
- p {
-  margin: 8px 0 0 0 !important;
-}
-
-.block-editor-block-list__layout 
- .appia-block 
- .components-base-control 
- .components-base-control__field 
- input[type="text"] {
-  padding: 0;
-  margin-top: 1em;
-  font-size: 0.75em;
-  border-radius: 0;
-  border: none;
-  border-bottom: 2px solid lightgray;
-  color: #666666;
-  transition: border-bottom 0.1s, padding 0.1s;
-}
-
-.block-editor-block-list__layout 
- .appia-block 
- .components-base-control 
- .components-base-control__field 
- input[type="text"]:focus {
-  padding-bottom: 6px;
+.appia-input__rich-text:focus {
+  padding-bottom: 4px;
+  padding-top: 0;
   border-bottom: 4px solid #1989c1;
   color: black;
   box-shadow: none;
 }
 
-.block-editor-block-list__layout 
- .appia-block 
- .components-base-control 
- .components-base-control__field 
-      label {
+.appia-blocks .appia-input__rich-text p {
+  margin: 0;
+  margin-bottom: 0;
+}
+
+.appia-field-block input[type="text"] {
+  padding: 0;
+  margin-top: 1em;
+  border-radius: 0;
+  border: none;
+  padding-top: 8px;
+  padding-bottom: 0;
+  border-bottom: 2px solid lightgray;
+  color: #666666;
+  transition: border-bottom 0.1s, padding 0.1s;
+  box-sizing: content-box;
+}
+
+.appia-field-block input[type="text"]:focus {
+  padding-bottom: 6px;
+  padding-top: 0;
+  border-bottom: 4px solid #1989c1;
+  color: black;
+  box-shadow: none;
+}
+
+.appia-field-block input[type="text"]::placeholder {
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.appia-field-block label {
   display: block;
   margin-bottom: 8px;
 }

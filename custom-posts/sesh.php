@@ -24,7 +24,7 @@ function appia_register_sesh() {
   $args = array(
     'labels'                  => $labels,
     'public'                  => true,
-    'menu_icon'               => 'dashicons-desktop',
+    'menu_icon'               => 'dashicons-tickets-alt',
     'show_in_rest'            => true,
     'publicly_queryable'      => true,
   );

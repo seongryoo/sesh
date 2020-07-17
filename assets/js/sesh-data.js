@@ -74,7 +74,7 @@
   const seshArgs = {
     title: 'Session Data',
     category: 'appia-blocks',
-    icon: 'calendar-alt',
+    icon: 'tickets-alt',
     attributes: {
       speakers: {
         type: 'string',

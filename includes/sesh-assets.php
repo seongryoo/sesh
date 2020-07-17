@@ -4,6 +4,7 @@
 function appia_load_block_assets() {
   $scripts = array(
     'sesh-data',
+    'sched-data',
   );
   $deps = array(
     'wp-blocks',

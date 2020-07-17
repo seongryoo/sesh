@@ -80,13 +80,13 @@
 
 /* Styling for text input blocks */
 .block-editor-block-list__layout 
- .sesh-block 
+ .appia-block 
  .components-base-control {
   margin-bottom: 2.5em;
   position: relative;
 }
 .block-editor-block-list__layout 
- .sesh-block 
+ .appia-block 
  .components-base-control
  .components-base-control__help {
   font-size: 1.125em;
@@ -97,7 +97,7 @@
   color: #757575;
 }
 .block-editor-block-list__layout 
- .sesh-block 
+ .appia-block 
  .components-base-control 
  .components-base-control__field {
   margin-bottom: 0;
@@ -109,14 +109,14 @@
   box-shadow: 0 10px 25px 2px rgba(0, 0, 0, 0.1);
 }
 .block-editor-block-list__layout 
- .sesh-block 
+ .appia-block 
  .components-base-control.helper-label
  .components-base-control__field {
   padding: 1em 1.25em 3em 1.25em;
 }
 
 .block-editor-block-list__layout 
- .sesh-block 
+ .appia-block 
  .components-base-control 
  .components-base-control__field 
  .block-editor-rich-text__editable {
@@ -132,7 +132,7 @@
 }
 
 .block-editor-block-list__layout 
- .sesh-block 
+ .appia-block 
  .components-base-control 
  .components-base-control__field 
  .block-editor-rich-text__editable:focus {
@@ -142,7 +142,7 @@
   box-shadow: none;
 }
 .block-editor-block-list__layout 
- .sesh-block 
+ .appia-block 
  .components-base-control 
  .components-base-control__field 
       input[type="text"]::placeholder {
@@ -150,7 +150,7 @@
 }
 
 .block-editor-block-list__layout 
- .sesh-block 
+ .appia-block 
  .components-base-control 
  .components-base-control__field 
  .block-editor-rich-text__editable 
@@ -159,7 +159,7 @@
 }
 
 .block-editor-block-list__layout 
- .sesh-block 
+ .appia-block 
  .components-base-control 
  .components-base-control__field 
  input[type="text"] {
@@ -174,7 +174,7 @@
 }
 
 .block-editor-block-list__layout 
- .sesh-block 
+ .appia-block 
  .components-base-control 
  .components-base-control__field 
  input[type="text"]:focus {
@@ -185,7 +185,7 @@
 }
 
 .block-editor-block-list__layout 
- .sesh-block 
+ .appia-block 
  .components-base-control 
  .components-base-control__field 
       label {
@@ -194,8 +194,8 @@
 }
 
 .block-editor-block-list__layout 
- .sesh-block 
- button.components-button.upload-button {
+ .appia-block 
+ button.components-button {
   color: rgb(0, 124, 186);
   font-size: 0.75em;
   padding: 1.25em 1em;
@@ -204,18 +204,18 @@
 }
 
 .block-editor-block-list__layout 
- .sesh-block 
+ .appia-block 
  button.components-button.upload-button 
  span {
   margin-right: 0.2em;
 }
 
 .block-editor-block-list__layout 
- .sesh-block 
- button.components-button.upload-button:focus,
+ .appia-block 
+ button.components-button:focus,
 .block-editor-block-list__layout 
- .sesh-block 
- button.components-button.upload-button:hover {
+ .appia-block 
+ button.components-button:hover {
   background: #1989c1 !important;
   border: 2px solid #1989c1 !important;
   color: white !important;
@@ -223,7 +223,7 @@
 }
 
 .block-editor-block-list__layout 
- .sesh-block 
+ .appia-block 
  img.uploaded-image-display {
   max-width: 250px;
   display: block;
@@ -231,7 +231,24 @@
 }
 
 .block-editor-block-list__layout 
- .sesh-block 
+ .appia-block 
  .components-datetime__date {
   border: none;
 }
+
+.slot {
+  display: flex;
+  width: 100%;
+  padding: 1em;
+  background: aliceblue;
+  margin: 0.5em;
+}
+
+.block-editor-block-list__layout 
+ .appia-block 
+ .components-base-control.ungarnished
+ .components-base-control__field {
+  padding: 0;
+  background: none;
+  margin: 0;
+ }

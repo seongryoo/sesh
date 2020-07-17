@@ -77,12 +77,39 @@
             },
             'Remove slot'
         );
+        const name = el(
+            'div',
+            {
+              className: 'slot-name',
+            },
+            [slotNameEditable, removeSlotButton]
+        );
+        const tracksObj = getAttr('tracks');
+        const childrenArr = [];
+        for (const [index, track] of tracksObj.entries()) {
+          const child = el(
+              'div',
+              {
+                'data-track-id': index,
+                'data-track-name': track.name,
+              },
+              'TEMP'
+          );
+          childrenArr.push(child);
+        }
+        const children = el(
+            'div',
+            {
+              className: 'slot-children',
+            },
+            childrenArr
+        );
         const element = el(
             'div',
             {
               className: 'slot',
             },
-            [slotNameEditable, removeSlotButton]
+            [name, children]
         );
         renderArr.push(element);
       }
@@ -93,7 +120,6 @@
         {},
         drawSlot()
     );
-
     const slotForm = el(
         'div',
         {
@@ -101,12 +127,94 @@
         },
         [addSlotName, addSlotButton, displaySlots]
     );
+    // Track name
+    let currTrackName = '';
+    const addTrackNameArgs = {
+      onChange: function(value) {
+        currTrackName = value;
+      },
+      id: 'track-name-form',
+      placeholder: 'Start typing...',
+      label: 'Schedule track name (can be left blank)',
+    };
+    const addTrackName = el(TextControl, addTrackNameArgs);
+    // Add track button
+    const trackButtonArgs = {
+      onClick: function(value) {
+        const tracksObj = getAttr('tracks');
+        tracksObj.push({
+          name: currTrackName,
+        });
+        storeAttr('tracks', tracksObj);
+        const form = document.getElementById('track-name-form');
+        currTrackName = '';
+        form.value = currTrackName;
+      },
+    };
+    const addTrackButton = el(
+        Button,
+        trackButtonArgs,
+        'Add schedule track'
+    );
+    const drawTrack = function() {
+      const tracksObj = getAttr('tracks');
+      const renderArr = [];
+      for (const [index, track] of tracksObj.entries()) {
+        const trackNameEditable = el(
+            TextControl,
+            {
+              'className': 'ungarnished',
+              'data-id': index,
+              'value': track.name,
+              'onChange': function(value) {
+                tracksObj[index].name = value;
+                storeAttr('tracks', tracksObj);
+              },
+            }
+        );
+        const removeTrackButton = el(
+            Button,
+            {
+              'className': 'track-button button-remove',
+              'data-id': [index],
+              'onClick': function() {
+                const indexString = event.target.getAttribute('data-id');
+                const indexInt = parseInt(indexString);
+                tracksObj.splice(indexInt, 1);
+                storeAttr('tracks', tracksObj);
+              },
+            },
+            'Remove track'
+        );
+        const element = el(
+            'div',
+            {
+              className: 'track',
+            },
+            [trackNameEditable, removeTrackButton]
+        );
+        renderArr.push(element);
+      }
+      return renderArr;
+    };
+    const displayTracks = el(
+        'div',
+        {},
+        drawTrack()
+    );
+    const trackForm = el(
+        'div',
+        {
+          className: 'sched-track sched',
+        },
+        [addTrackName, addTrackButton, displayTracks]
+    );
     return el(
         'div',
         {
           className: 'appia-blocks',
         },
-        [slotForm]
+        [slotForm, trackForm]
     );
   };
   const schedArgs = {

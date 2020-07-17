@@ -202,7 +202,7 @@
   border: none;
 }
 
-.slot {
+.slot, .track {
   display: flex;
   width: 100%;
   padding: 1em;

@@ -50,15 +50,15 @@
     const drawSlot = function(mult) {
       const slotsObj = getAttr('slots');
       const renderArr = [];
-      for (const [index, slot] of slotsObj.entries()) {
+      for (const [slotIndex, slot] of slotsObj.entries()) {
         const slotNameEditable = el(
             TextControl,
             {
               'className': 'ungarnished',
-              'data-id': index,
+              'data-id': slotIndex,
               'value': slot.name,
               'onChange': function(value) {
-                slotsObj[index].name = value;
+                slotsObj[slotIndex].name = value;
                 storeAttr('slots', slotsObj);
               },
             }
@@ -67,7 +67,7 @@
             Button,
             {
               'className': 'slot-button button-remove',
-              'data-id': [index],
+              'data-id': slotIndex,
               'onClick': function() {
                 const indexString = event.target.getAttribute('data-id');
                 const indexInt = parseInt(indexString);
@@ -86,11 +86,12 @@
         );
         const tracksObj = getAttr('tracks');
         const childrenArr = [];
-        for (const [index, track] of tracksObj.entries()) {
+        for (const [trackIndex, track] of tracksObj.entries()) {
           const child = el(
               'div',
               {
-                'data-track-id': index,
+                'data-track-id': trackIndex,
+                'data-slot-id': slotIndex,
                 'data-track-name': track.name,
               },
               'TEMP'
@@ -107,7 +108,8 @@
         const element = el(
             'div',
             {
-              className: 'slot',
+              'className': 'slot',
+              'data-slot-id': slotIndex,
             },
             [name, children]
         );

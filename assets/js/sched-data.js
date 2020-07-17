@@ -33,7 +33,7 @@
       onClick: function(value) {
         const slotsObj = getAttr('slots');
         slotsObj.push({
-          name: [currSlotName],
+          name: currSlotName,
         });
         storeAttr('slots', slotsObj);
         const form = document.getElementById('slot-name-form');
@@ -55,8 +55,8 @@
             TextControl,
             {
               'className': 'ungarnished',
-              'data-id': [index],
-              'value': [slot.name],
+              'data-id': index,
+              'value': slot.name,
               'onChange': function(value) {
                 slotsObj[index].name = value;
                 storeAttr('slots', slotsObj);

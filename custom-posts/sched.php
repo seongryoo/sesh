@@ -42,7 +42,7 @@ add_action( 'init', 'appia_register_sched' );
 function appia_register_sched_meta() {
   $multi_array = array(
     'show_in_rest'            => true,
-    'single'                  => false,
+    'single'                  => true,
     'type'                    => 'string',
   );
 

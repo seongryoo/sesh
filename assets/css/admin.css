@@ -251,4 +251,14 @@
   padding: 0;
   background: none;
   margin: 0;
+  box-shadow: none;
+ }
+.block-editor-block-list__layout 
+ .appia-block 
+ .components-base-control.ungarnished
+ .components-base-control__field
+ input {
+  background: none;
+  padding: 0.25em;
+  margin: 0;
  }

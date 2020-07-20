@@ -1,7 +1,123 @@
 .slot, .track {
-  display: flex;
-  width: 100%;
-  padding: 1em;
-  background: aliceblue;
-  margin: 0.5em;
+    display: flex;
+    width: 100%;
+    background: #b1dbff;
+    font-family: 'Segoe UI', sans-serif;
+}
+.button-remove-text:before {
+    content: "\f158";
+    font-family: 'dashicons';
+}
+
+.button-add-text:before {
+    content: "\f502";
+    font-family: 'dashicons';
+}
+
+.sched-tracks .button-add {
+    margin-top: 0.25em;
+    margin-left: 0.5em;
+}
+
+.button-add,
+.button-remove {
+    flex: 0 0 auto;
+    padding: 0;
+}
+.button-add .button-add-text,
+.button-remove .button-remove-text {
+    font-size: 2em;
+    line-height: 2em;
+}
+.button-remove {
+    opacity: 0.25;
+}
+.track:hover .button-remove,
+.slot-name:hover .button-remove {
+    opacity: 1;
+    color: crimson;
+}
+
+/* Tracks and tabs */
+.sched-tracks {
+    display: flex;
+    align-items: center;
+}
+.tracks-container {
+    display: flex;
+    width: 100%;
+}
+.tracks-container:nth-child(1):before {
+    content: '';
+    display: block;
+    flex: 1 0 25%;
+}
+.track {
+    padding: 0.5em 1em 0 1em;
+    border-top-left-radius: 1em;
+    border-top-right-radius: 1em;
+    margin-left: 1em;
+    display: flex;
+    justify-content: space-between;
+}
+.track input[type="text"] {
+    font-size: 1.5em;
+    border: none;
+    background: none;
+    color: black;
+}
+
+/* Slots */
+.slot-name {
+    display: flex;
+    flex: 1 0 25%;
+    align-items: center;
+}
+.slot-children {
+    width: 100%;
+    display: flex;
+}
+.slot-child {
+    width: 100%;
+    display: block;
+    padding: 1em;
+    margin-right: 1em;
+    background: white;
+}
+
+.slot {
+    padding: 1em;
+    border-bottom: 1px solid gray;
+}
+.slot-name input[type="text"] {
+    font-size: 1.5em;
+    border: none;
+    background: none;
+}
+
+.sidebar-sessions {
+    padding: 0.5em;
+    font-family: 'Segoe UI', sans-serif;
+    flex: 1 1 25%;
+}
+.session {
+    padding: 0.5em;
+    background: #b4ded0;
+    margin: 1em 0;
+    cursor: grab;
+}
+.session-name {
+    display: flex;
+    align-items: center;
+}
+.session-name:before {
+    content: "\f545";
+    font-family: 'dashicons';
+    margin-right: 0.5em;
+    display: block;
+    flex: 0 1 auto;
+}
+
+.schedule {
+    display: flex;
 }

@@ -4,7 +4,6 @@
   const TextControl = wp.components.TextControl;
   const Button = wp.components.Button;
   const withSelect = wp.data.withSelect;
-
   const schedEdit = withSelect(function(select) {
     const posts = select('core')
         .getEntityRecords('postType', 'post_sesh', {per_page: -1});
@@ -25,27 +24,44 @@
         [attr]: JSON.stringify(value),
       });
     };
+    const dragStart = function(event) {
+      event.dataTransfer.effectAllowed = 'move'
+      event.dataTransfer.setData('text', event.target.id);
+      console.log(event.target.id)
+      console.log('why')
+      console.log(event.dataTransfer)
+      console.log(event)
+    };
     const drawSession = function() {
-      console.log("ha!")
-      console.log(props.sessions);
       const sessionElements = [];
-      for (const sesh of props.sessions) {
-        console.log(sesh);
+      for (const [index, sesh] of props.sessions.entries()) {
+        const sessionName = el(
+            'div',
+            {
+              className: 'session-name',
+            },
+            sesh.title.raw
+        );
         const sessionElement = el(
             'div',
-            {},
-            sesh.title.raw
+            {
+              className: 'draggable session',
+              draggable: true,
+              onDragStart: dragStart,
+              id: 'session' + index,
+            },
+            sessionName
         );
         sessionElements.push(sessionElement);
       }
       return sessionElements;
     };
     const sessions = el(
-      'div',
-      {
-        className: 'sidebar-sessions',
-      },
-      drawSession()
+        'div',
+        {
+          className: 'sidebar-sessions',
+        },
+        drawSession()
     );
 
     // Slot name
@@ -60,6 +76,26 @@
     };
     const addSlotName = el(TextControl, addSlotNameArgs);
     // Add slot button
+    const addText = function(msg) {
+      return el(
+          'div',
+          {
+            'className': 'button-add-text',
+            'aria-label': msg,
+          },
+          ''
+      );
+    };
+    const removeText = function(msg) {
+      return el(
+          'div',
+          {
+            'className': 'button-remove-text',
+            'aria-label': msg,
+          },
+          ''
+      );
+    };
     const slotButtonArgs = {
       onClick: function(value) {
         const slotsObj = getAttr('slots');
@@ -71,16 +107,20 @@
         currSlotName = '';
         form.value = currSlotName;
       },
+      className: 'button-add',
     };
     const addSlotButton = el(
         Button,
         slotButtonArgs,
-        'Add time slot'
+        addText('Add time slot')
     );
+
     // Display current slots
     const drawSlot = function(mult) {
       const slotsObj = getAttr('slots');
       const renderArr = [];
+
+
       for (const [slotIndex, slot] of slotsObj.entries()) {
         const slotNameEditable = el(
             TextControl,
@@ -100,13 +140,16 @@
               'className': 'slot-button button-remove',
               'data-id': slotIndex,
               'onClick': function() {
-                const indexString = event.target.getAttribute('data-id');
-                const indexInt = parseInt(indexString);
-                slotsObj.splice(indexInt, 1);
-                storeAttr('slots', slotsObj);
+                if (window.confirm('Delete the timeslot named "'
+                  + slot.name + '"?')) {
+                  const indexString = event.target.getAttribute('data-id');
+                  const indexInt = parseInt(indexString);
+                  slotsObj.splice(indexInt, 1);
+                  storeAttr('slots', slotsObj);
+                }
               },
             },
-            'Remove slot'
+            removeText('Remove slot')
         );
         const name = el(
             'div',
@@ -115,6 +158,19 @@
             },
             [slotNameEditable, removeSlotButton]
         );
+        const drop = function(event) {
+          console.log('suffering')
+          event.preventDefault();
+          event.stopPropagation();
+          const data = event.dataTransfer.getData('text');
+          const obj = document.getElementById(data);
+          event.target.appendChild(obj);
+          console.log("I got et")
+        }
+        const dragOver = function(event) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
         const tracksObj = getAttr('tracks');
         const childrenArr = [];
         for (const [trackIndex, track] of tracksObj.entries()) {
@@ -125,6 +181,8 @@
                 'data-slot-id': slotIndex,
                 'data-track-name': track.name,
                 'className': 'slot-child dropzone',
+                'onDrop': drop,
+                'onDragOver': dragOver,
               },
               'TEMP'
           );
@@ -184,11 +242,12 @@
         currTrackName = '';
         form.value = currTrackName;
       },
+      className: 'button-add',
     };
     const addTrackButton = el(
         Button,
         trackButtonArgs,
-        'Add schedule track'
+        addText('Add schedule track')
     );
     const drawTrack = function() {
       const tracksObj = getAttr('tracks');
@@ -212,13 +271,16 @@
               'className': 'track-button button-remove',
               'data-id': [index],
               'onClick': function() {
-                const indexString = event.target.getAttribute('data-id');
-                const indexInt = parseInt(indexString);
-                tracksObj.splice(indexInt, 1);
-                storeAttr('tracks', tracksObj);
+                if (window.confirm('Delete the schedule track named "'
+                  + track.name + '"?')) {
+                  const indexString = event.target.getAttribute('data-id');
+                  const indexInt = parseInt(indexString);
+                  tracksObj.splice(indexInt, 1);
+                  storeAttr('tracks', tracksObj);
+                }
               },
             },
-            'Remove track'
+            removeText('Remove track')
         );
         const element = el(
             'div',
@@ -233,13 +295,15 @@
     };
     const displayTracks = el(
         'div',
-        {},
+        {
+          className: 'tracks-container',
+        },
         drawTrack()
     );
     const trackForm = el(
         'div',
         {
-          className: 'sched-track sched',
+          className: 'sched-tracks sched',
         },
         [displayTracks, addTrackButton]
     );

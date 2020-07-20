@@ -27,6 +27,7 @@ function appia_register_sesh() {
     'menu_icon'               => 'dashicons-tickets-alt',
     'show_in_rest'            => true,
     'publicly_queryable'      => true,
+    'rest_controller_class'   => 'WP_REST_Posts_Controller',
   );
 
   register_post_type( 'post_sesh', $args );

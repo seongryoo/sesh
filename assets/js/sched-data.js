@@ -3,7 +3,15 @@
   const registerBlock = wp.blocks.registerBlockType;
   const TextControl = wp.components.TextControl;
   const Button = wp.components.Button;
-  const schedEdit = function(props) {
+  const withSelect = wp.data.withSelect;
+
+  const schedEdit = withSelect(function(select) {
+    const posts = select('core')
+        .getEntityRecords('postType', 'post_sesh', {per_page: -1});
+    return {
+      sessions: posts != null ? posts : [],
+    };
+  })(function(props) {
     // Helper methods for JSON to metadata string conversion
     const getAttr = function(attr) {
       if (props.attributes[attr] != '') {
@@ -17,6 +25,29 @@
         [attr]: JSON.stringify(value),
       });
     };
+    const drawSession = function() {
+      console.log("ha!")
+      console.log(props.sessions);
+      const sessionElements = [];
+      for (const sesh of props.sessions) {
+        console.log(sesh);
+        const sessionElement = el(
+            'div',
+            {},
+            sesh.title.raw
+        );
+        sessionElements.push(sessionElement);
+      }
+      return sessionElements;
+    };
+    const sessions = el(
+      'div',
+      {
+
+      },
+      drawSession()
+    );
+
     // Slot name
     let currSlotName = '';
     const addSlotNameArgs = {
@@ -216,9 +247,9 @@
         {
           className: 'appia-blocks',
         },
-        [slotForm, trackForm]
+        [sessions, slotForm, trackForm]
     );
-  };
+  });
   const schedArgs = {
     title: 'Schedule Data',
     category: 'appia-blocks',
@@ -238,6 +269,9 @@
         type: 'string',
         source: 'meta',
         meta: 'post_sched_meta_sessions',
+      },
+      allSessions: {
+        type: 'string',
       }, /* End attributes */
     },
     edit: schedEdit,

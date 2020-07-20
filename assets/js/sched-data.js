@@ -43,7 +43,7 @@
     const sessions = el(
       'div',
       {
-
+        className: 'sidebar-sessions',
       },
       drawSession()
     );
@@ -124,6 +124,7 @@
                 'data-track-id': trackIndex,
                 'data-slot-id': slotIndex,
                 'data-track-name': track.name,
+                'className': 'slot-child dropzone',
               },
               'TEMP'
           );
@@ -158,7 +159,7 @@
         {
           className: 'sched-slot sched',
         },
-        [addSlotName, addSlotButton, displaySlots]
+        [displaySlots, addSlotButton]
     );
     // Track name
     let currTrackName = '';
@@ -240,14 +241,21 @@
         {
           className: 'sched-track sched',
         },
-        [addTrackName, addTrackButton, displayTracks]
+        [displayTracks, addTrackButton]
+    );
+    const tracksAndSlots = el(
+        'div',
+        {
+          className: 'tracks-and-slots',
+        },
+        [trackForm, slotForm]
     );
     return el(
         'div',
         {
-          className: 'appia-blocks',
+          className: 'appia-blocks schedule',
         },
-        [sessions, slotForm, trackForm]
+        [sessions, tracksAndSlots]
     );
   });
   const schedArgs = {
@@ -269,9 +277,6 @@
         type: 'string',
         source: 'meta',
         meta: 'post_sched_meta_sessions',
-      },
-      allSessions: {
-        type: 'string',
       }, /* End attributes */
     },
     edit: schedEdit,

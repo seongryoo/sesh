@@ -20,6 +20,7 @@ function appia_load_block_assets() {
 
   $styles = array(
     'admin',
+    'schedule',
   );
   foreach( $styles as $slug ) {
     $style_name = 'appia-' . $slug;

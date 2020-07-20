@@ -1,0 +1,7 @@
+.slot, .track {
+  display: flex;
+  width: 100%;
+  padding: 1em;
+  background: aliceblue;
+  margin: 0.5em;
+}

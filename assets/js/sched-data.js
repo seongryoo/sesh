@@ -13,13 +13,14 @@
   const Draggable = wp.components.Draggable;
   const DropZoneProvider = wp.components.DropZoneProvider;
   const DropZone = wp.components.DropZone;
-  const onDraggableStart = function() {
-    console.log('start')
-  }
-  const onDraggableEnd = function() {
-    console.log('end')
-  }
-
+  function pauseEvent(e){
+    if(e.stopPropagation) e.stopPropagation();
+    if(e.preventDefault) e.preventDefault();
+    e.cancelBubble=true;
+    e.returnValue=false;
+    return false;
+}
+  let dragSourceElement;
   const makeDraggableSession = function(index, sesh) {
     // Text for session name
     const sessionName = el(
@@ -35,8 +36,26 @@
           {
             className: 'appia-draggable',
             draggable: true,
-            onDragStart: onDraggableStart,
-            onDragEnd: onDraggableEnd,
+            onDragStart: function(event) {
+              event.stopPropagation();
+
+              event.dataTransfer.effectAllowed = 'move';
+
+// Setup some dummy drag-data to ensure dragging
+event.dataTransfer.setData('text/plain', 'some_dummy_data');
+// Now we'll create a dummy image for our dragImage
+var dragImage = document.createElement('div');
+dragImage.setAttribute('style', 'position: absolute; left: 0px; top: 0px; width: 40px; height: 40px; background: red; z-index: -1');
+document.body.appendChild(dragImage);
+console.log(dragImage)
+
+// And finally we assign the dragImage and center it on cursor
+event.dataTransfer.setDragImage(dragImage, 20, 20);
+              console.log(sesh);
+            },
+            onDragEnd: function(event) {
+              console.log('ended the drag')
+            },
           },
           sessionName
       );

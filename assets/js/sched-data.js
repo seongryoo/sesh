@@ -1,17 +1,56 @@
 (function(wp) {
+  // React aliases
   const el = wp.element.createElement;
   const registerBlock = wp.blocks.registerBlockType;
+  // Select function for db call
+  const withSelect = wp.data.withSelect;
+  // Wordpress components
   const TextControl = wp.components.TextControl;
   const Button = wp.components.Button;
-  const withSelect = wp.data.withSelect;
+  const Draggable = wp.components.Draggable;
+  const onDraggableStart = function() {
+    console.log('start')
+  }
+  const onDraggableEnd = function() {
+    console.log('end')
+  }
+
+  const makeDraggableSession = function(index) {
+    const dragFunction = function() {
+      return el(
+          'div',
+          {
+            className: 'appia-draggable',
+            draggable: true,
+            onDragStart: onDraggableStart,
+            onDragEnd: onDraggableEnd,
+          },
+          'Session ' + index
+      );
+    };
+    return el(
+        Draggable,
+        {
+          elementId: 'session' + index,
+          transferData: {},
+        },
+        dragFunction
+    );
+  };
+
   const schedEdit = withSelect(function(select) {
-    const posts = select('core')
-        .getEntityRecords('postType', 'post_sesh', {per_page: -1});
+    // Get session post types from wordpress db
+    const posts = select('core').getEntityRecords(
+        'postType',
+        'post_sesh',
+        {per_page: -1}
+    );
+    // Pass the array of posts to schedEdit as props.sessions
     return {
       sessions: posts != null ? posts : [],
     };
   })(function(props) {
-    // Helper methods for JSON to metadata string conversion
+    // Helper method which pulls attribute data and converts to JSON
     const getAttr = function(attr) {
       if (props.attributes[attr] != '') {
         return JSON.parse(props.attributes[attr]);
@@ -19,22 +58,18 @@
         return [];
       }
     };
+    // Helper method which stores JSON object as string attribute
     const storeAttr = function(attr, value) {
       props.setAttributes({
         [attr]: JSON.stringify(value),
       });
     };
-    const dragStart = function(event) {
-      event.dataTransfer.effectAllowed = 'move'
-      event.dataTransfer.setData('text', event.target.id);
-      console.log(event.target.id)
-      console.log('why')
-      console.log(event.dataTransfer)
-      console.log(event)
-    };
+    // Generates array of rendered session elements
     const drawSession = function() {
       const sessionElements = [];
+      // Add one rendered element per object in sessions array
       for (const [index, sesh] of props.sessions.entries()) {
+        // Text for session name
         const sessionName = el(
             'div',
             {
@@ -42,16 +77,8 @@
             },
             sesh.title.raw
         );
-        const sessionElement = el(
-            'div',
-            {
-              className: 'draggable session',
-              draggable: true,
-              onDragStart: dragStart,
-              id: 'session' + index,
-            },
-            sessionName
-        );
+        // Blocky session element
+        const sessionElement = makeDraggableSession(index);
         sessionElements.push(sessionElement);
       }
       return sessionElements;

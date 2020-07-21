@@ -4,10 +4,15 @@
   const registerBlock = wp.blocks.registerBlockType;
   // Select function for db call
   const withSelect = wp.data.withSelect;
+  // State control
+  const withState = wp.compose.withState;
+  const setState = wp.compose.setState;
   // Wordpress components
   const TextControl = wp.components.TextControl;
   const Button = wp.components.Button;
   const Draggable = wp.components.Draggable;
+  const DropZoneProvider = wp.components.DropZoneProvider;
+  const DropZone = wp.components.DropZone;
   const onDraggableStart = function() {
     console.log('start')
   }
@@ -15,7 +20,15 @@
     console.log('end')
   }
 
-  const makeDraggableSession = function(index) {
+  const makeDraggableSession = function(index, sesh) {
+    // Text for session name
+    const sessionName = el(
+        'div',
+        {
+          className: 'session-name',
+        },
+        sesh.title.raw
+    );
     const dragFunction = function() {
       return el(
           'div',
@@ -25,7 +38,7 @@
             onDragStart: onDraggableStart,
             onDragEnd: onDraggableEnd,
           },
-          'Session ' + index
+          sessionName
       );
     };
     return el(
@@ -36,6 +49,42 @@
         },
         dragFunction
     );
+  };
+
+const MyDropZone = withState({
+  hasDropped: false
+})(({
+  hasDropped,
+  setState
+}) => el(
+  DropZoneProvider, 
+  {}, 
+  el(
+    "div",
+    {}, 
+    [hasDropped ? 'Dropped!' : 'Drop something here', 
+    el(
+      DropZone, 
+      {
+        onFilesDrop: () => setState({
+          hasDropped: true
+        }),
+        onHTMLDrop: () => setState({
+          hasDropped: true
+        }),
+        onDrop: () => setState({
+          hasDropped: true
+        })
+      }
+    )]
+  )
+));
+
+
+  const makeDropSlot = function() {
+    console.log(dropSlot)
+    console.log(el('div', {}, dropSlot))
+    return el('div', {}, dropSlot);
   };
 
   const schedEdit = withSelect(function(select) {
@@ -69,16 +118,8 @@
       const sessionElements = [];
       // Add one rendered element per object in sessions array
       for (const [index, sesh] of props.sessions.entries()) {
-        // Text for session name
-        const sessionName = el(
-            'div',
-            {
-              className: 'session-name',
-            },
-            sesh.title.raw
-        );
         // Blocky session element
-        const sessionElement = makeDraggableSession(index);
+        const sessionElement = makeDraggableSession(index, sesh);
         sessionElements.push(sessionElement);
       }
       return sessionElements;
@@ -185,19 +226,6 @@
             },
             [slotNameEditable, removeSlotButton]
         );
-        const drop = function(event) {
-          console.log('suffering')
-          event.preventDefault();
-          event.stopPropagation();
-          const data = event.dataTransfer.getData('text');
-          const obj = document.getElementById(data);
-          event.target.appendChild(obj);
-          console.log("I got et")
-        }
-        const dragOver = function(event) {
-          event.preventDefault();
-          event.stopPropagation();
-        }
         const tracksObj = getAttr('tracks');
         const childrenArr = [];
         for (const [trackIndex, track] of tracksObj.entries()) {
@@ -207,11 +235,13 @@
                 'data-track-id': trackIndex,
                 'data-slot-id': slotIndex,
                 'data-track-name': track.name,
-                'className': 'slot-child dropzone',
-                'onDrop': drop,
-                'onDragOver': dragOver,
+                'className': 'slot-child',
               },
-              'TEMP'
+              el(
+                MyDropZone,
+                {},
+                'no'
+              )
           );
           childrenArr.push(child);
         }

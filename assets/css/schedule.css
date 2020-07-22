@@ -1,3 +1,6 @@
+.tracks-and-slots {
+    width: 100%;
+}
 .slot, .track {
     display: flex;
     width: 100%;
@@ -98,7 +101,7 @@
 .sidebar-sessions {
     padding: 0.5em;
     font-family: 'Segoe UI', sans-serif;
-    flex: 1 1 25%;
+    flex: 0 1 25%;
 }
 .session {
     padding: 0.5em;

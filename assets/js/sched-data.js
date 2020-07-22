@@ -4,9 +4,6 @@
   const registerBlock = wp.blocks.registerBlockType;
   // Select function for db call
   const withSelect = wp.data.withSelect;
-  // State control
-  const withState = wp.compose.withState;
-  const setState = wp.compose.setState;
   // Wordpress components
   const TextControl = wp.components.TextControl;
   const Button = wp.components.Button;
@@ -14,7 +11,7 @@
   const eventOverride = function(event) {
     event.stopPropagation();
     event.preventDefault();
-  }
+  };
 
   const schedEdit = withSelect(function(select) {
     // Get session post types from wordpress db
@@ -42,6 +39,27 @@
         [attr]: JSON.stringify(value),
       });
     };
+    const storeNewSlotData = function() {
+      const slotsObj = getAttr('slots');
+      slotsObj.push({
+        name: '',
+      });
+      storeAttr('slots', slotsObj);
+    };
+    const storeNewTrackData = function() {
+      const tracksObj = getAttr('tracks');
+      tracksObj.push({
+        name: '',
+      });
+      storeAttr('tracks', tracksObj);
+    };
+    // Empty properties case
+    if (getAttr('slots').length == 0) {
+      storeNewSlotData();
+    }
+    if (getAttr('tracks').length == 0) {
+      storeNewTrackData();
+    }
     const elSessionName = function(name) {
       return el(
           'div',
@@ -55,11 +73,12 @@
       event.stopPropagation();
       event.dataTransfer.effectAllowed = 'move';
       console.log(data)
-      event.dataTransfer.setData('text/plain', data)
+      event.dataTransfer.setData('text/plain', data);
     };
     const handleDragEnd = function(event) {
       console.log('drag ended');
-    }
+    };
+    // Returns react component for a single session
     const elSession = function(index, sesh, sessionName) {
       return el(
           'div',
@@ -76,6 +95,7 @@
           sessionName
       );
     };
+    // given index and session obj, handles data retrieval & work division
     const drawSession = function(index, sesh) {
       const name = sesh.title.raw;
       const sessionName = elSessionName(name);
@@ -91,6 +111,7 @@
       }
       return sessionElements;
     };
+    // Sessions element is top-level
     const sessions = el(
         'div',
         {
@@ -98,19 +119,7 @@
         },
         drawSessions()
     );
-
-    // Slot name
-    let currSlotName = '';
-    const addSlotNameArgs = {
-      onChange: function(value) {
-        currSlotName = value;
-      },
-      id: 'slot-name-form',
-      placeholder: 'Start typing...',
-      label: 'Time slot name (can be left blank)',
-    };
-    const addSlotName = el(TextControl, addSlotNameArgs);
-    // Add slot button
+    // Generic add button text
     const addText = function(msg) {
       return el(
           'div',
@@ -121,6 +130,7 @@
           ''
       );
     };
+    // Generic delete button text
     const removeText = function(msg) {
       return el(
           'div',
@@ -131,31 +141,21 @@
           ''
       );
     };
+    // Args for add time slot button
     const slotButtonArgs = {
-      onClick: function(value) {
-        const slotsObj = getAttr('slots');
-        slotsObj.push({
-          name: currSlotName,
-        });
-        storeAttr('slots', slotsObj);
-        const form = document.getElementById('slot-name-form');
-        currSlotName = '';
-        form.value = currSlotName;
-      },
+      onClick: storeNewSlotData,
       className: 'button-add',
     };
+    // Add time slot button
     const addSlotButton = el(
         Button,
         slotButtonArgs,
         addText('Add time slot')
     );
-
     // Display current slots
-    const drawSlot = function(mult) {
+    const drawSlots = function(mult) {
       const slotsObj = getAttr('slots');
       const renderArr = [];
-
-
       for (const [slotIndex, slot] of slotsObj.entries()) {
         const slotNameEditable = el(
             TextControl,
@@ -186,6 +186,7 @@
             },
             removeText('Remove slot')
         );
+        // Left side of slot flex group
         const name = el(
             'div',
             {
@@ -193,10 +194,11 @@
             },
             [slotNameEditable, removeSlotButton]
         );
+        // Generate one dropzone for each track
         const tracksObj = getAttr('tracks');
         const childrenArr = [];
         for (const [trackIndex, track] of tracksObj.entries()) {
-          const child = el(
+          const trackElement = el(
               'div',
               {
                 'data-track-id': trackIndex,
@@ -212,7 +214,7 @@
               },
               'hello'
           );
-          childrenArr.push(child);
+          childrenArr.push(trackElement);
         }
         const children = el(
             'div',
@@ -236,7 +238,7 @@
     const displaySlots = el(
         'div',
         {},
-        drawSlot()
+        drawSlots()
     );
     const slotForm = el(
         'div',
@@ -245,29 +247,9 @@
         },
         [displaySlots, addSlotButton]
     );
-    // Track name
-    let currTrackName = '';
-    const addTrackNameArgs = {
-      onChange: function(value) {
-        currTrackName = value;
-      },
-      id: 'track-name-form',
-      placeholder: 'Start typing...',
-      label: 'Schedule track name (can be left blank)',
-    };
-    const addTrackName = el(TextControl, addTrackNameArgs);
     // Add track button
     const trackButtonArgs = {
-      onClick: function(value) {
-        const tracksObj = getAttr('tracks');
-        tracksObj.push({
-          name: currTrackName,
-        });
-        storeAttr('tracks', tracksObj);
-        const form = document.getElementById('track-name-form');
-        currTrackName = '';
-        form.value = currTrackName;
-      },
+      onClick: storeNewTrackData,
       className: 'button-add',
     };
     const addTrackButton = el(

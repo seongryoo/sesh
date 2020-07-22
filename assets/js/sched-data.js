@@ -10,102 +10,13 @@
   // Wordpress components
   const TextControl = wp.components.TextControl;
   const Button = wp.components.Button;
-  const Draggable = wp.components.Draggable;
-  const DropZoneProvider = wp.components.DropZoneProvider;
-  const DropZone = wp.components.DropZone;
-  function pauseEvent(e){
-    if(e.stopPropagation) e.stopPropagation();
-    if(e.preventDefault) e.preventDefault();
-    e.cancelBubble=true;
-    e.returnValue=false;
-    return false;
-}
-  let dragSourceElement;
-  const makeDraggableSession = function(index, sesh) {
-    // Text for session name
-    const sessionName = el(
-        'div',
-        {
-          className: 'session-name',
-        },
-        sesh.title.raw
-    );
-    const dragFunction = function() {
-      return el(
-          'div',
-          {
-            className: 'appia-draggable',
-            draggable: true,
-            onDragStart: function(event) {
-              event.stopPropagation();
 
-              event.dataTransfer.effectAllowed = 'move';
-
-// Setup some dummy drag-data to ensure dragging
-event.dataTransfer.setData('text/plain', 'some_dummy_data');
-// Now we'll create a dummy image for our dragImage
-var dragImage = document.createElement('div');
-dragImage.setAttribute('style', 'position: absolute; left: 0px; top: 0px; width: 40px; height: 40px; background: red; z-index: -1');
-document.body.appendChild(dragImage);
-console.log(dragImage)
-
-// And finally we assign the dragImage and center it on cursor
-event.dataTransfer.setDragImage(dragImage, 20, 20);
-              console.log(sesh);
-            },
-            onDragEnd: function(event) {
-              console.log('ended the drag')
-            },
-          },
-          sessionName
-      );
-    };
-    return el(
-        Draggable,
-        {
-          elementId: 'session' + index,
-          transferData: {},
-        },
-        dragFunction
-    );
-  };
-
-const MyDropZone = withState({
-  hasDropped: false
-})(({
-  hasDropped,
-  setState
-}) => el(
-  DropZoneProvider, 
-  {}, 
-  el(
-    "div",
-    {}, 
-    [hasDropped ? 'Dropped!' : 'Drop something here', 
-    el(
-      DropZone, 
-      {
-        onFilesDrop: () => setState({
-          hasDropped: true
-        }),
-        onHTMLDrop: () => setState({
-          hasDropped: true
-        }),
-        onDrop: () => setState({
-          hasDropped: true
-        })
-      }
-    )]
-  )
-));
-
-
-  const makeDropSlot = function() {
-    console.log(dropSlot)
-    console.log(el('div', {}, dropSlot))
-    return el('div', {}, dropSlot);
-  };
-
+  const eventOverride = function(event) {
+    event.stopPropagation();
+    event.preventDefault();
+  }
+  const gridEntry = [];
+  const grid = [gridEntry];
   const schedEdit = withSelect(function(select) {
     // Get session post types from wordpress db
     const posts = select('core').getEntityRecords(
@@ -132,13 +43,51 @@ const MyDropZone = withState({
         [attr]: JSON.stringify(value),
       });
     };
+    const elSessionName = function(name) {
+      return el(
+          'div',
+          {
+            className: 'session-name',
+          },
+          name
+      );
+    };
+    const handleDragStart = function(event, data) {
+      event.stopPropagation();
+      event.dataTransfer.effectAllowed = 'move';
+      console.log(data)
+      event.dataTransfer.setData('text/plain', data)
+    };
+    const handleDragEnd = function(event) {
+      console.log('drag ended');
+    };
+    const elSession = function(index, sesh, sessionName) {
+      return el(
+          'div',
+          {
+            className: 'appia-draggable',
+            draggable: true,
+            onDragStart: function(event) {
+              handleDragStart(event, sesh.id);
+            },
+            onDragEnd: function(event) {
+              handleDragEnd(event);
+            },
+          },
+          sessionName
+      );
+    };
+    const drawSession = function(index, sesh) {
+      const name = sesh.title.raw;
+      const sessionName = elSessionName(name);
+      return elSession(index, sesh, sessionName);
+    };
     // Generates array of rendered session elements
-    const drawSession = function() {
+    const drawSessions = function() {
       const sessionElements = [];
       // Add one rendered element per object in sessions array
       for (const [index, sesh] of props.sessions.entries()) {
-        // Blocky session element
-        const sessionElement = makeDraggableSession(index, sesh);
+        const sessionElement = drawSession(index, sesh);
         sessionElements.push(sessionElement);
       }
       return sessionElements;
@@ -148,7 +97,7 @@ const MyDropZone = withState({
         {
           className: 'sidebar-sessions',
         },
-        drawSession()
+        drawSessions()
     );
 
     // Slot name
@@ -206,9 +155,9 @@ const MyDropZone = withState({
     const drawSlot = function(mult) {
       const slotsObj = getAttr('slots');
       const renderArr = [];
-
-
       for (const [slotIndex, slot] of slotsObj.entries()) {
+        grid.push([]);
+        console.log(grid);
         const slotNameEditable = el(
             TextControl,
             {
@@ -248,6 +197,7 @@ const MyDropZone = withState({
         const tracksObj = getAttr('tracks');
         const childrenArr = [];
         for (const [trackIndex, track] of tracksObj.entries()) {
+          grid[slotIndex].push[trackIndex];
           const child = el(
               'div',
               {
@@ -255,12 +205,15 @@ const MyDropZone = withState({
                 'data-slot-id': slotIndex,
                 'data-track-name': track.name,
                 'className': 'slot-child',
+                'onDragOver': (event) => eventOverride(event),
+                'onDragEnter': (event) => eventOverride(event),
+                'onDrop': function(event) {
+                  eventOverride(event);
+                  console.log("I got et")
+                  grid[slotIndex][trackIndex].push(track.id);
+                },
               },
-              el(
-                MyDropZone,
-                {},
-                'no'
-              )
+              'hello'
           );
           childrenArr.push(child);
         }

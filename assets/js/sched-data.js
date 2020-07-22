@@ -82,15 +82,27 @@
       event.stopPropagation();
       event.dataTransfer.effectAllowed = 'move';
       event.dataTransfer.setData('text/plain', data);
+      const dragItem = event.target;
+      dragItem.classList.add('dragging');
+      const slots = document.getElementsByClassName('slot');
+      for (const slot of slots) {
+        slot.classList.add('no-pointer');
+      }
     };
     const handleDragEnd = function(event) {
+      const dragItem = event.target;
+      dragItem.classList.remove('dragging');
+      const slots = document.getElementsByClassName('slot');
+      for (const slot of slots) {
+        slot.classList.remove('no-pointer');
+      }
     };
     // Returns react component for a single session
     const elSession = function(index, sesh, sessionName) {
       return el(
           'div',
           {
-            className: 'appia-draggable',
+            className: 'appia-draggable session',
             draggable: true,
             onDragStart: function(event) {
               handleDragStart(event, sesh.id);
@@ -174,6 +186,7 @@
               'className': 'ungarnished',
               'data-id': slotIndex,
               'value': slot.name,
+              'label': 'Time Slot Name',
               'onChange': function(value) {
                 slotsObj[slotIndex] = {
                   name: value != null ? value : '',
@@ -209,7 +222,7 @@
         const displaySlotName = el(
             'div',
             {
-              className: 'slot-name',
+              className: 'slot-name sched-editable',
             },
             displaySlotNameArray
         );
@@ -325,6 +338,7 @@
               'className': 'ungarnished',
               'data-id': index,
               'value': track.name,
+              'label': 'Track Name',
               'onChange': function(value) {
                 tracksObj[index].name = value;
                 storeAttr('tracks', tracksObj);

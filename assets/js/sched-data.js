@@ -15,8 +15,7 @@
     event.stopPropagation();
     event.preventDefault();
   }
-  const gridEntry = [];
-  const grid = [gridEntry];
+
   const schedEdit = withSelect(function(select) {
     // Get session post types from wordpress db
     const posts = select('core').getEntityRecords(
@@ -60,7 +59,7 @@
     };
     const handleDragEnd = function(event) {
       console.log('drag ended');
-    };
+    }
     const elSession = function(index, sesh, sessionName) {
       return el(
           'div',
@@ -155,9 +154,9 @@
     const drawSlot = function(mult) {
       const slotsObj = getAttr('slots');
       const renderArr = [];
+
+
       for (const [slotIndex, slot] of slotsObj.entries()) {
-        grid.push([]);
-        console.log(grid);
         const slotNameEditable = el(
             TextControl,
             {
@@ -197,7 +196,6 @@
         const tracksObj = getAttr('tracks');
         const childrenArr = [];
         for (const [trackIndex, track] of tracksObj.entries()) {
-          grid[slotIndex].push[trackIndex];
           const child = el(
               'div',
               {
@@ -210,7 +208,6 @@
                 'onDrop': function(event) {
                   eventOverride(event);
                   console.log("I got et")
-                  grid[slotIndex][trackIndex].push(track.id);
                 },
               },
               'hello'

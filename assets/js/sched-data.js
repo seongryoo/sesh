@@ -30,15 +30,20 @@
       if (props.attributes[attr] != '') {
         const theString = props.attributes[attr];
         const theJSON = JSON.parse(theString);
-        return theJSON;
+        return theJSON.data;
       } else {
-        return [];
+        const emptyArray = [];
+        return emptyArray;
       }
     };
     // Helper method which stores JSON object as string attribute
     const storeAttr = function(attr, value) {
+      const theJSON = {
+        data: value,
+      };
+      const theString = JSON.stringify(theJSON);
       props.setAttributes({
-        [attr]: JSON.stringify(value),
+        [attr]: theString,
       });
     };
     const storeNewSlotData = function() {
@@ -170,7 +175,9 @@
               'data-id': slotIndex,
               'value': slot.name,
               'onChange': function(value) {
-                slotsObj[slotIndex].name = value != null ? value : '';
+                slotsObj[slotIndex] = {
+                  name: value != null ? value : '',
+                };
                 storeAttr('slots', slotsObj);
               },
             }
@@ -183,9 +190,12 @@
               'onClick': function() {
                 if (window.confirm('Delete the timeslot named "'
                   + slot.name + '"?')) {
+                  console.log(slotsObj)
                   slotsObj.splice(slotIndex, 1);
+                  console.log(slotsObj)
                   storeAttr('slots', slotsObj);
                   grid.splice(slotIndex, 1);
+                  console.log(grid);
                   storeAttr('sessions', grid);
                 }
               },

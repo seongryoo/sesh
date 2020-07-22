@@ -28,7 +28,9 @@
     // Helper method which pulls attribute data and converts to JSON
     const getAttr = function(attr) {
       if (props.attributes[attr] != '') {
-        return JSON.parse(props.attributes[attr]);
+        const theString = props.attributes[attr];
+        const theJSON = JSON.parse(theString);
+        return theJSON;
       } else {
         return [];
       }
@@ -74,11 +76,9 @@
     const handleDragStart = function(event, data) {
       event.stopPropagation();
       event.dataTransfer.effectAllowed = 'move';
-      console.log(data)
       event.dataTransfer.setData('text/plain', data);
     };
     const handleDragEnd = function(event) {
-      console.log('drag ended');
     };
     // Returns react component for a single session
     const elSession = function(index, sesh, sessionName) {
@@ -162,7 +162,6 @@
         // Create a slot in the grids object if there isn't one
         if (grid.length < slotIndex + 1) {
           grid.push([]);
-          console.log(grid);
         }
         const slotNameEditable = el(
             TextControl,
@@ -171,7 +170,7 @@
               'data-id': slotIndex,
               'value': slot.name,
               'onChange': function(value) {
-                slotsObj[slotIndex].name = value;
+                slotsObj[slotIndex].name = value != null ? value : '';
                 storeAttr('slots', slotsObj);
               },
             }
@@ -187,20 +186,25 @@
                   slotsObj.splice(slotIndex, 1);
                   storeAttr('slots', slotsObj);
                   grid.splice(slotIndex, 1);
-                  console.log(grid);
                   storeAttr('sessions', grid);
                 }
               },
             },
             removeText('Remove slot')
         );
+        let displaySlotNameArray;
+        if (slotsObj.length != 1) {
+          displaySlotNameArray = [slotNameEditable, removeSlotButton];
+        } else {
+          displaySlotNameArray = [slotNameEditable];
+        }
         // Left side of slot flex group
-        const name = el(
+        const displaySlotName = el(
             'div',
             {
               className: 'slot-name',
             },
-            [slotNameEditable, removeSlotButton]
+            displaySlotNameArray
         );
         // Generate one dropzone for each track
         const tracksObj = getAttr('tracks');
@@ -210,11 +214,22 @@
             grid[slotIndex].push([]);
           }
           const trackStorage = [];
-          for (const id of grid[slotIndex][trackIndex]) {
+          for (const [itemIndex, id] of grid[slotIndex][trackIndex].entries()) {
+            const removeStoredItemButton = el(
+                Button,
+                {
+                  onClick: function() {
+                    grid[slotIndex][trackIndex].splice(itemIndex, 1);
+                    // console.log(grid)
+                    storeAttr('sessions', grid);
+                  },
+                },
+                removeText('Remove session from slot')
+            );
             const storedItem = el(
                 'div',
                 {},
-                id
+                [id, removeStoredItemButton]
             );
             trackStorage.push(storedItem);
           }
@@ -229,11 +244,8 @@
                 'onDragEnter': (event) => eventOverride(event),
                 'onDrop': function(event) {
                   eventOverride(event);
-                  console.log("I got et")
                   const data = event.dataTransfer.getData('text/plain');
                   grid[slotIndex][trackIndex].push(data);
-                  console.log(data)
-                  console.log(grid)
                   storeAttr('sessions', grid);
                 },
               },
@@ -254,7 +266,7 @@
               'className': 'slot',
               'data-slot-id': slotIndex,
             },
-            [name, children]
+            [displaySlotName, children]
         );
         renderArr.push(element);
       }
@@ -309,15 +321,9 @@
                   tracksObj.splice(index, 1);
                   storeAttr('tracks', tracksObj);
                   for (const [slotIndex, slot] of grid.entries()) {
-                    console.log('before')
-                    console.log(grid[slotIndex])
                     grid[slotIndex].splice(index, 1);
-                    console.log('after')
-                    console.log(grid[slotIndex])
                   }
-                  console.log(grid)
-                  console.log(tracksObj.length)
-                  storeAttr('sessions', grid)
+                  storeAttr('sessions', grid);
                 }
               },
             },

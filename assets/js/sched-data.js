@@ -7,12 +7,12 @@
   // Wordpress components
   const TextControl = wp.components.TextControl;
   const Button = wp.components.Button;
-
+  // Helper method for drag events
   const eventOverride = function(event) {
     event.stopPropagation();
     event.preventDefault();
   };
-
+  // The star of the show
   const schedEdit = withSelect(function(select) {
     // Get session post types from wordpress db
     const posts = select('core').getEntityRecords(
@@ -60,6 +60,8 @@
     if (getAttr('tracks').length == 0) {
       storeNewTrackData();
     }
+    // Get sessions grid
+    const grid = getAttr('sessions');
     const elSessionName = function(name) {
       return el(
           'div',
@@ -157,6 +159,11 @@
       const slotsObj = getAttr('slots');
       const renderArr = [];
       for (const [slotIndex, slot] of slotsObj.entries()) {
+        // Create a slot in the grids object if there isn't one
+        if (grid.length < slotIndex + 1) {
+          grid.push([]);
+          console.log(grid);
+        }
         const slotNameEditable = el(
             TextControl,
             {
@@ -177,10 +184,11 @@
               'onClick': function() {
                 if (window.confirm('Delete the timeslot named "'
                   + slot.name + '"?')) {
-                  const indexString = event.target.getAttribute('data-id');
-                  const indexInt = parseInt(indexString);
-                  slotsObj.splice(indexInt, 1);
+                  slotsObj.splice(slotIndex, 1);
                   storeAttr('slots', slotsObj);
+                  grid.splice(slotIndex, 1);
+                  console.log(grid);
+                  storeAttr('sessions', grid);
                 }
               },
             },
@@ -198,6 +206,18 @@
         const tracksObj = getAttr('tracks');
         const childrenArr = [];
         for (const [trackIndex, track] of tracksObj.entries()) {
+          if (grid[slotIndex].length < trackIndex + 1) {
+            grid[slotIndex].push([]);
+          }
+          const trackStorage = [];
+          for (const id of grid[slotIndex][trackIndex]) {
+            const storedItem = el(
+                'div',
+                {},
+                id
+            );
+            trackStorage.push(storedItem);
+          }
           const trackElement = el(
               'div',
               {
@@ -210,9 +230,14 @@
                 'onDrop': function(event) {
                   eventOverride(event);
                   console.log("I got et")
+                  const data = event.dataTransfer.getData('text/plain');
+                  grid[slotIndex][trackIndex].push(data);
+                  console.log(data)
+                  console.log(grid)
+                  storeAttr('sessions', grid);
                 },
               },
-              'hello'
+              trackStorage
           );
           childrenArr.push(trackElement);
         }
@@ -281,21 +306,36 @@
               'onClick': function() {
                 if (window.confirm('Delete the schedule track named "'
                   + track.name + '"?')) {
-                  const indexString = event.target.getAttribute('data-id');
-                  const indexInt = parseInt(indexString);
-                  tracksObj.splice(indexInt, 1);
+                  tracksObj.splice(index, 1);
                   storeAttr('tracks', tracksObj);
+                  for (const [slotIndex, slot] of grid.entries()) {
+                    console.log('before')
+                    console.log(grid[slotIndex])
+                    grid[slotIndex].splice(index, 1);
+                    console.log('after')
+                    console.log(grid[slotIndex])
+                  }
+                  console.log(grid)
+                  console.log(tracksObj.length)
+                  storeAttr('sessions', grid)
                 }
               },
             },
             removeText('Remove track')
         );
+        let trackFormArray = [];
+
+        if (tracksObj.length != 1) {
+          trackFormArray = [trackNameEditable, removeTrackButton];
+        } else {
+          trackFormArray = [trackNameEditable];
+        }
         const element = el(
             'div',
             {
               className: 'track',
             },
-            [trackNameEditable, removeTrackButton]
+            trackFormArray
         );
         renderArr.push(element);
       }

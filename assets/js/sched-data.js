@@ -190,12 +190,9 @@
               'onClick': function() {
                 if (window.confirm('Delete the timeslot named "'
                   + slot.name + '"?')) {
-                  console.log(slotsObj)
                   slotsObj.splice(slotIndex, 1);
-                  console.log(slotsObj)
                   storeAttr('slots', slotsObj);
                   grid.splice(slotIndex, 1);
-                  console.log(grid);
                   storeAttr('sessions', grid);
                 }
               },
@@ -230,7 +227,6 @@
                 {
                   onClick: function() {
                     grid[slotIndex][trackIndex].splice(itemIndex, 1);
-                    // console.log(grid)
                     storeAttr('sessions', grid);
                   },
                 },
@@ -238,7 +234,9 @@
             );
             const storedItem = el(
                 'div',
-                {},
+                {
+                  className: 'stored-session',
+                },
                 [id, removeStoredItemButton]
             );
             trackStorage.push(storedItem);
@@ -249,11 +247,24 @@
                 'data-track-id': trackIndex,
                 'data-slot-id': slotIndex,
                 'data-track-name': track.name,
-                'className': 'slot-child',
-                'onDragOver': (event) => eventOverride(event),
-                'onDragEnter': (event) => eventOverride(event),
+                'className': 'slot-child dropzone drop-session',
+                'onDragLeave': function(event) {
+                  eventOverride(event);
+                  const dropZone = event.target;
+                  dropZone.classList.remove('dropzone-entered');
+                },
+                'onDragOver': function(event) {
+                  eventOverride(event);
+                },
+                'onDragEnter': function(event) {
+                  eventOverride(event);
+                  const dropZone = event.target;
+                  dropZone.classList.add('dropzone-entered');
+                },
                 'onDrop': function(event) {
                   eventOverride(event);
+                  const dropZone = event.target;
+                  dropZone.classList.remove('dropzone-entered');
                   const data = event.dataTransfer.getData('text/plain');
                   grid[slotIndex][trackIndex].push(data);
                   storeAttr('sessions', grid);

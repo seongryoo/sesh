@@ -22,9 +22,23 @@
     );
     // Pass the array of posts to schedEdit as props.sessions
     return {
-      sessions: posts != null ? posts : [],
+      sessions: posts,
     };
   })(function(props) {
+    if (!props.sessions) {
+      return 'Fetching sessions...';
+    }
+    if (props.sessions.length == 0) {
+      return 'Could not find any sessions to work with.'
+        + 'Make some session posts to get started!';
+    }
+    const getSessionById = function(id) {
+      for (const sesh of props.sessions) {
+        if (sesh.id == id) {
+          return sesh;
+        }
+      }
+    };
     // Helper method which pulls attribute data and converts to JSON
     const getAttr = function(attr) {
       if (props.attributes[attr] != '') {
@@ -245,12 +259,13 @@
                 },
                 removeText('Remove session from slot')
             );
+            const theSession = getSessionById(id);
             const storedItem = el(
                 'div',
                 {
                   className: 'stored-session',
                 },
-                [id, removeStoredItemButton]
+                [theSession.title.raw, removeStoredItemButton]
             );
             trackStorage.push(storedItem);
           }

@@ -85,26 +85,25 @@ function appia_sched_data_block_render( $attributes ) {
   
   $markup = '';
 
-  $markup .= '<div class="tracks-container">';
-    $markup .= '<div class="track-offset"></div>';
+  $markup .= '<div class="schedule-container">';
 
-    foreach( $tracks as $track ) {
-      $markup .= '<div class="track">';
-        $markup .= appia_get_name( $track );
-      $markup .= '</div>';
-    }
+    $markup .= '<div class="tracks-container">';
+      $markup .= '<div class="track-offset"></div>';
+      foreach( $tracks as $track ) {
+        $markup .= '<div class="track">';
+          $markup .= appia_get_name( $track );
+        $markup .= '</div>';
+      }
+    $markup .= '</div>'; // end tracks-container
 
-  $markup .= '</div>'; // end tracks-container
-
-  $markup .= '<div class="slots-container">';
-    foreach( $slots as $slot_index=>$slot ) {
-      $markup .= '<div class="slot">';
-        $markup .= '<div class="slot-name">';
-          $markup .= appia_get_name( $slot );
-        $markup .= '</div>'; // end slot-name
-
-        $markup .= '<div class="slot-dropzones-container">';
+    $markup .= '<div class="slots-container">';
+      foreach( $slots as $slot_index=>$slot ) {
+        $markup .= '<div class="slot">';
+          $markup .= '<div class="slot-name">';
+            $markup .= appia_get_name( $slot );
+          $markup .= '</div>'; // end slot-name
           foreach( $tracks as $track_index=>$track ) {
+            $markup .= '<div class="slot-dropzone">';
             $stored = appia_sessions( $sessions,
                                       $slot_index,
                                       $track_index );
@@ -115,7 +114,6 @@ function appia_sched_data_block_render( $attributes ) {
               $sesh_desc = get_post_meta( $sesh_id, 'post_sesh_meta_desc', true );
               $sesh_watch_link = get_post_meta( $sesh_id, 'post_sesh_meta_link', true );
               $sesh_page_url = get_permalink( $sesh_id );
-
                 $markup .= '<div class="session">';
 
                   $markup .= '<div class="session-name">';
@@ -145,15 +143,16 @@ function appia_sched_data_block_render( $attributes ) {
                   $markup .= '<div class="session-desc">';
                     $markup .= $sesh_desc;
                   $markup .= '</div>';
-                $markup .= '</div>';
+                  
+                $markup .= '</div>'; // end session
 
             }
-            // var_dump( $sessions );
-
+            $markup .= '</div>'; // end slot-dropzone
           }
-        $markup .= '</div>';
-      $markup .= '</div>';
-    }
-  
+        $markup .= '</div>'; // end slot
+      }
+    $markup .= '</div>'; // end slots-container
+
+  $markup .= '</div>'; // end schedule-container
   return $markup;
 }

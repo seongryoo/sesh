@@ -1,0 +1,19 @@
+.schedule-container {
+    border: 1px solid green;
+}
+.tracks-container {
+    border: 1px solid blue;
+    display: flex;
+    width: 100%;
+}
+.track-offset,
+.track {
+    flex: 1;
+}
+.slot {
+    display: flex;
+}
+.slot-dropzone,
+.slot-name {
+    flex: 1;
+}

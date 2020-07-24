@@ -94,23 +94,23 @@
     title: 'Session Data',
     category: 'appia-blocks',
     icon: 'tickets-alt',
-    attributes: {
-      speakers: {
-        type: 'string',
-        source: 'meta',
-        meta: 'post_sesh_meta_speakers',
-      },
-      desc: {
-        type: 'string',
-        source: 'meta',
-        meta: 'post_sesh_meta_desc',
-      },
-      link: {
-        type: 'string',
-        source: 'meta',
-        meta: 'post_sesh_meta_link',
-      },
-    }, /* End attributes */
+    // attributes: {
+    //   speakers: {
+    //     type: 'string',
+    //     source: 'meta',
+    //     meta: 'post_sesh_meta_speakers',
+    //   },
+    //   desc: {
+    //     type: 'string',
+    //     source: 'meta',
+    //     meta: 'post_sesh_meta_desc',
+    //   },
+    //   link: {
+    //     type: 'string',
+    //     source: 'meta',
+    //     meta: 'post_sesh_meta_link',
+    //   },
+    // }, /* End attributes */
     edit: seshEdit,
     save: function(props) {
       return null;

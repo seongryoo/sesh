@@ -113,13 +113,29 @@ function appia_sched_data_block_render( $attributes ) {
               $sesh_name = get_the_title( $sesh_id );
               $sesh_speakers = get_post_meta( $sesh_id, 'post_sesh_meta_speakers', true );
               $sesh_desc = get_post_meta( $sesh_id, 'post_sesh_meta_desc', true );
-              $sesh_link = get_post_meta( $sesh_id, 'post_sesh_meta_link', true );
+              $sesh_watch_link = get_post_meta( $sesh_id, 'post_sesh_meta_link', true );
               $sesh_page_url = get_permalink( $sesh_id );
 
                 $markup .= '<div class="session">';
+
                   $markup .= '<div class="session-name">';
-                    $markup .= $sesh_name;
-                    $markup .= $sesh_page_url;
+                    $markup .= '<a href="' . $sesh_page_url . '" '
+                               . 'class="session-name-link" '
+                               . 'aria-label="Open detailed page for ' . $sesh_name . '">';
+                      $markup .= $sesh_name;
+                    $markup .= '</a>';
+                  $markup .= '</div>';
+
+                  $markup .= '<div class="track-number">';
+                    $markup .= 'Track ' . ( $track_index + 1 );
+                  $markup .= '</div>';
+
+                  $markup .= '<div class="watch-session">';
+                    $markup .= '<a href="' . $sesh_watch_link . '" '
+                               . 'aria-label="Watch a recording of '
+                               . $sesh_name . '">';
+                      $markup .= 'Watch recording';
+                    $markup .= '</a>';
                   $markup .= '</div>';
 
                   $markup .= '<div class="session-speakers">';
@@ -128,10 +144,6 @@ function appia_sched_data_block_render( $attributes ) {
 
                   $markup .= '<div class="session-desc">';
                     $markup .= $sesh_desc;
-                  $markup .= '</div>';
-
-                  $markup .= '<div class="session-link">';
-                    $markup .= $sesh_link;
                   $markup .= '</div>';
                 $markup .= '</div>';
 

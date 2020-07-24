@@ -114,10 +114,12 @@ function appia_sched_data_block_render( $attributes ) {
               $sesh_speakers = get_post_meta( $sesh_id, 'post_sesh_meta_speakers', true );
               $sesh_desc = get_post_meta( $sesh_id, 'post_sesh_meta_desc', true );
               $sesh_link = get_post_meta( $sesh_id, 'post_sesh_meta_link', true );
+              $sesh_page_url = get_permalink( $sesh_id );
 
                 $markup .= '<div class="session">';
                   $markup .= '<div class="session-name">';
                     $markup .= $sesh_name;
+                    $markup .= $sesh_page_url;
                   $markup .= '</div>';
 
                   $markup .= '<div class="session-speakers">';

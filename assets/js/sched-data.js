@@ -12,25 +12,30 @@
     event.stopPropagation();
     event.preventDefault();
   };
-  // The star of the show
-  const schedEdit = withSelect(function(select) {
+  const fetchSessions = withSelect(function(select) {
     // Get session post types from wordpress db
+    const queryArgs = {
+      per_page: -1,
+      status: 'publish,future,draft,pending,private',
+    };
     const posts = select('core').getEntityRecords(
         'postType',
         'post_sesh',
-        {per_page: -1}
+        queryArgs
     );
     // Pass the array of posts to schedEdit as props.sessions
     return {
       sessions: posts,
     };
-  })(function(props) {
+  });
+  // The star of the show
+  const schedEdit = fetchSessions(function(props) {
     if (!props.sessions) {
       return 'Fetching sessions...';
     }
     if (props.sessions.length == 0) {
       return 'Could not find any sessions to work with.'
-        + 'Make some session posts to get started!';
+        + ' Make some session posts to get started!';
     }
     const getSessionById = function(id) {
       for (const sesh of props.sessions) {
@@ -430,25 +435,25 @@
     title: 'Schedule Data',
     category: 'appia-blocks',
     icon: 'index-card',
-    attributes: {
-      tracks: {
-        type: 'string',
-        source: 'meta',
-        meta: 'post_sched_meta_tracks',
-      },
-      slots: {
-        type: 'string',
-        source: 'meta',
-        meta: 'post_sched_meta_slots',
-      },
-      sessions: {
-        type: 'string',
-        source: 'meta',
-        meta: 'post_sched_meta_sessions',
-      }, /* End attributes */
-    },
+    // attributes: {
+    //   tracks: {
+    //     type: 'string',
+    //     source: 'meta',
+    //     meta: 'post_sched_meta_tracks',
+    //   },
+    //   slots: {
+    //     type: 'string',
+    //     source: 'meta',
+    //     meta: 'post_sched_meta_slots',
+    //   },
+    //   sessions: {
+    //     type: 'string',
+    //     source: 'meta',
+    //     meta: 'post_sched_meta_sessions',
+    //   }, /* End attributes */
+    // },
     edit: schedEdit,
-    save: function(props) {
+    save: function() {
       return null;
     },
   }; /* End schedArgs */

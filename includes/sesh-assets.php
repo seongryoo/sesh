@@ -16,7 +16,7 @@ function appia_load_block_assets() {
   foreach( $scripts as $slug ) {
     $script_name = 'appia-' . $slug;
     $url = plugin_dir_url( __FILE__ ) . '../assets/js/' . $slug . '.js';
-    wp_enqueue_script( $script_name, $url, $deps );
+    wp_enqueue_script( $script_name, $url, $wp_deps );
   }
 
   $styles = array(

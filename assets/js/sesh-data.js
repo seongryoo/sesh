@@ -2,6 +2,7 @@
   const el = wp.element.createElement;
   const registerBlock = wp.blocks.registerBlockType;
   const TextControl = wp.components.TextControl;
+  const TextareaControl = wp.components.TextareaControl;
   const seshEdit = function(props) {
     // Helper method that generates appia field wrapper
     const elWrap = function(element, args, value) {
@@ -37,11 +38,11 @@
         props.setAttributes({speakers: value});
       },
       label: 'Speaker list:',
-      help: 'Enter a list of names separated by commas.',
-      placeholder: 'e.g. "Lorraine Hansberry, June Jordan"',
+      help: 'Type a list of names, starting a new line for each new person',
+      placeholder: 'Type here...',
       value: props.attributes.speakers,
     };
-    const speakers = elWrap(TextControl, speakersArgs);
+    const speakers = elWrap(TextareaControl, speakersArgs);
     // Description field
     const descArgs = {
       onChange: function(value) {

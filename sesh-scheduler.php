@@ -4,6 +4,19 @@
  * Plugin Name: Sesh Scheduler
  */
 
+// Edit this araay to customize what fields are displayed on the full schedule
+// Field options:
+//    speakers
+//    description
+//    link-to-recording
+//    track-number
+$show_in_schedule = array(
+  'speakers'                  => true,
+  'description'               => false,
+  'link-to-recording'         => true,
+  'track-number'              => true,
+);
+
 // Assets file loads in js and css needed to render blocks in WP editor
 include( plugin_dir_path( __FILE__ ) . 'includes/sesh-assets.php');
 

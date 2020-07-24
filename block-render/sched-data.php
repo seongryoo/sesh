@@ -50,7 +50,7 @@ function appia_get_meta( $id, $meta_name ) {
 function appia_get_table_name( $tables, $index ) {
   $name = '';
   if ( count( $tables ) > $index ) {
-    $the_object = $tables[$index];
+    $the_object = $tables[ $index ];
     appia_get_name( $the_object );
   }
   return $name;
@@ -66,13 +66,22 @@ function appia_get_name( $table ) {
 
 function appia_sessions( $all_sessions, $slot_num, $track_num ) {
   $the_sessions = array();
-  if ( isset( $all_sessions[$slot_num] ) ) {
-    $slot = $all_sessions[$slot_num];
-    if ( isset( $slot[$track_num] ) ) {
-      $the_sessions = $slot[$track_num];
+  if ( isset( $all_sessions[ $slot_num ] ) ) {
+    $slot = $all_sessions[ $slot_num ];
+    if ( isset( $slot[ $track_num ] ) ) {
+      $the_sessions = $slot[ $track_num ];
     }
   }
   return $the_sessions;
+}
+
+function appia_in_schedule( $field_name ) {
+  global $show_in_schedule;
+  if ( isset( $show_in_schedule[ $field_name ] ) && $show_in_schedule[ $field_name ] == true ) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 function appia_sched_data_block_render( $attributes ) {
@@ -110,9 +119,15 @@ function appia_sched_data_block_render( $attributes ) {
             foreach( $stored as $sesh ) {
               $sesh_id = intval( $sesh );
               $sesh_name = get_the_title( $sesh_id );
-              $sesh_speakers = get_post_meta( $sesh_id, 'post_sesh_meta_speakers', true );
-              $sesh_desc = get_post_meta( $sesh_id, 'post_sesh_meta_desc', true );
-              $sesh_watch_link = get_post_meta( $sesh_id, 'post_sesh_meta_link', true );
+              if ( appia_in_schedule( 'speakers' ) ) {
+                $sesh_speakers = get_post_meta( $sesh_id, 'post_sesh_meta_speakers', true );
+              }
+              if ( appia_in_schedule( 'description' ) ) {
+                $sesh_desc = get_post_meta( $sesh_id, 'post_sesh_meta_desc', true );
+              }
+              if ( appia_in_schedule( 'link-to-recording' ) ) {
+                $sesh_watch_link = get_post_meta( $sesh_id, 'post_sesh_meta_link', true );
+              }
               $sesh_page_url = get_permalink( $sesh_id );
                 $markup .= '<div class="session">';
 
@@ -124,25 +139,33 @@ function appia_sched_data_block_render( $attributes ) {
                     $markup .= '</a>';
                   $markup .= '</div>';
 
-                  $markup .= '<div class="track-number">';
-                    $markup .= 'Track ' . ( $track_index + 1 );
-                  $markup .= '</div>';
+                  if ( appia_in_schedule( 'track-number' ) ) {
+                    $markup .= '<div class="track-number">';
+                      $markup .= 'Track ' . ( $track_index + 1 );
+                    $markup .= '</div>';
+                  }
 
-                  $markup .= '<div class="watch-session">';
-                    $markup .= '<a href="' . $sesh_watch_link . '" '
-                               . 'aria-label="Watch a recording of '
-                               . $sesh_name . '">';
-                      $markup .= 'Watch recording';
-                    $markup .= '</a>';
-                  $markup .= '</div>';
+                  if ( appia_in_schedule( 'link-to-recording' ) ) {
+                    $markup .= '<div class="watch-session">';
+                      $markup .= '<a href="' . $sesh_watch_link . '" '
+                                 . 'aria-label="Watch a recording of '
+                                 . $sesh_name . '">';
+                        $markup .= 'Watch recording';
+                      $markup .= '</a>';
+                    $markup .= '</div>';
+                  }
 
-                  $markup .= '<div class="session-speakers">';
-                    $markup .= $sesh_speakers;
-                  $markup .= '</div>';
+                  if ( appia_in_schedule( 'speakers' ) ) {
+                    $markup .= '<div class="session-speakers" style="white-space: pre-wrap;">';
+                      $markup .= $sesh_speakers;
+                    $markup .= '</div>';
+                  }
 
-                  $markup .= '<div class="session-desc">';
-                    $markup .= $sesh_desc;
-                  $markup .= '</div>';
+                  if ( appia_in_schedule( 'description' ) ) {
+                    $markup .= '<div class="session-desc">';
+                      $markup .= $sesh_desc;
+                    $markup .= '</div>';
+                  }
                   
                 $markup .= '</div>'; // end session
 

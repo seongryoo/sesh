@@ -4,9 +4,12 @@
   const registerBlock = wp.blocks.registerBlockType;
   // Select function for db call
   const withSelect = wp.data.withSelect;
+  // State control for checkbox
+  const useState = wp.element.useState;
   // Wordpress components
   const TextControl = wp.components.TextControl;
   const Button = wp.components.Button;
+  const CheckboxControl = wp.components.CheckboxControl;
   // Helper method for drag events
   const eventOverride = function(event) {
     event.stopPropagation();
@@ -49,6 +52,7 @@
       if (props.attributes[attr] != '') {
         const theString = props.attributes[attr];
         const theJSON = JSON.parse(theString);
+        // console.log(theJSON.data)
         return theJSON.data;
       } else {
         const emptyArray = [];
@@ -199,6 +203,24 @@
         if (grid.length < slotIndex + 1) {
           grid.push([]);
         }
+        const addBeforeButton = el(
+            Button,
+            {
+              onClick: function() {
+                const slotsObj = getAttr('slots');
+                const blankSlot = {
+                  name: '',
+                };
+                slotsObj.splice(slotIndex, 0, blankSlot);
+                storeAttr('slots', slotsObj);
+                // console.log(grid[slotIndex])
+                grid.splice(slotIndex, 0, []);
+                storeAttr('sessions', grid);
+              },
+              className: 'button-add add-before',
+            },
+            addText('Add time slot before session ' + (slotIndex + 1))
+        );
         const slotNameEditable = el(
             TextControl,
             {
@@ -207,9 +229,7 @@
               'value': slot.name,
               'label': 'Time Slot Name',
               'onChange': function(value) {
-                slotsObj[slotIndex] = {
-                  name: value != null ? value : '',
-                };
+                slotsObj[slotIndex].name = value != null ? value : '',
                 storeAttr('slots', slotsObj);
               },
             }
@@ -231,19 +251,47 @@
             },
             removeText('Remove slot')
         );
+        let state;
+        if (slotsObj[slotIndex].shared) {
+          state = true;
+        } else {
+          state = false;
+        }
+        const [isChecked, setChecked] = useState( state );
+        const isShared = el(
+            CheckboxControl,
+            {
+              label: 'Trackless/shared slot',
+              checked: isChecked,
+              onChange: function(stateData) {
+                setChecked(stateData);
+                // console.log(stateData);
+                slotsObj[slotIndex].shared = stateData;
+                storeAttr('slots', slotsObj);
+                // console.log(slotsObj)
+              },
+            }
+        );
         let displaySlotNameArray;
         if (slotsObj.length != 1) {
           displaySlotNameArray = [slotNameEditable, removeSlotButton];
         } else {
           displaySlotNameArray = [slotNameEditable];
         }
+        const displaySlotAndDelete = el(
+            'div',
+            {
+              className: 'slot-name-delete',
+            },
+            displaySlotNameArray
+        );
         // Left side of slot flex group
         const displaySlotName = el(
             'div',
             {
               className: 'slot-name sched-editable',
             },
-            displaySlotNameArray
+            [displaySlotAndDelete, isShared]
         );
         // Generate one dropzone for each track
         const tracksObj = getAttr('tracks');
@@ -320,7 +368,7 @@
               'className': 'slot',
               'data-slot-id': slotIndex,
             },
-            [displaySlotName, children]
+            [addBeforeButton, displaySlotName, children]
         );
         renderArr.push(element);
       }

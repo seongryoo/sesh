@@ -1,6 +1,9 @@
 .tracks-and-slots {
     width: 100%;
 }
+.slot {
+    position: relative;
+}
 .slot, .track {
     display: flex;
     width: 100%;
@@ -27,6 +30,14 @@
     flex: 0 0 auto;
     padding: 0;
 }
+.button-add.add-before {
+    position: absolute;
+    display: block;
+    top: -2em;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+}
 .button-add .button-add-text,
 .button-remove .button-remove-text {
     font-size: 2em;
@@ -46,9 +57,14 @@
     display: flex;
     align-items: center;
 }
+.sched-tracks .button-add {
+    position: absolute;
+    right: 0;
+}
 .tracks-container {
     display: flex;
     width: 100%;
+    padding: 0 1em;
 }
 .tracks-container:nth-child(1):before {
     content: '';
@@ -59,7 +75,7 @@
     padding: 0.5em 1em 0 1em;
     border-top-left-radius: 1em;
     border-top-right-radius: 1em;
-    margin-left: 1em;
+    margin-right: 1em;
     display: flex;
     justify-content: space-between;
 }
@@ -75,6 +91,11 @@
     display: flex;
     flex: 1 0 25%;
     align-items: center;
+    flex-direction: column;
+    padding-right: 1em;
+}
+.slot-name-delete {
+    display: flex;
 }
 .slot-children {
     width: 100%;

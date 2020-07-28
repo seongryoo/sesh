@@ -1,8 +1,6 @@
 .schedule-container {
-    border: 1px solid green;
 }
 .tracks-container {
-    border: 1px solid blue;
     display: flex;
     width: 100%;
 }
@@ -16,4 +14,7 @@
 .slot-dropzone,
 .slot-name {
     flex: 1;
+}
+.slot-dropzone.slot-shared {
+    flex: 3;
 }

@@ -112,7 +112,14 @@ function appia_sched_data_block_render( $attributes ) {
             $markup .= appia_get_name( $slot );
           $markup .= '</div>'; // end slot-name
           foreach( $tracks as $track_index=>$track ) {
-            $markup .= '<div class="slot-dropzone">';
+            $track_name = appia_get_name( $track );
+            $track_clean = preg_replace( '/\W+/', '-', strtolower( strip_tags( $track_name ) ) );
+            $track_slug = $track_clean . ' track-' . ( $track_index + 1 );
+            $isShared = '';
+            if ( isset( $slot[ 'shared' ] ) && $slot[ 'shared' ] ) {
+              $isShared = ' slot-shared';
+            }
+            $markup .= '<div class="slot-dropzone ' . $track_slug . $isShared . '">';
             $stored = appia_sessions( $sessions,
                                       $slot_index,
                                       $track_index );
@@ -140,17 +147,25 @@ function appia_sched_data_block_render( $attributes ) {
                   $markup .= '</div>';
 
                   if ( appia_in_schedule( 'track-number' ) ) {
-                    $markup .= '<div class="track-number">';
-                      $markup .= 'Track ' . ( $track_index + 1 );
+                    $slug = $track_slug;
+                    $name = appia_get_name( $track );
+                    if ( isset( $slot[ 'shared' ] ) && $slot[ 'shared' ] ) {
+                      $slug = 'all-tracks';
+                      $name = 'All tracks';
+                    }
+                    $markup .= '<div class="track-number-container">';
+                      $markup .= '<div class="track-number ' . $slug . '">';
+                        $markup .= $name;
+                      $markup .= '</div>';
                     $markup .= '</div>';
                   }
 
                   if ( appia_in_schedule( 'link-to-recording' ) ) {
                     $markup .= '<div class="watch-session">';
                       $markup .= '<a href="' . $sesh_watch_link . '" '
-                                 . 'aria-label="Watch a recording of '
+                                 . 'aria-label="Link to join '
                                  . $sesh_name . '">';
-                        $markup .= 'Watch recording';
+                        $markup .= 'Join/watch session';
                       $markup .= '</a>';
                     $markup .= '</div>';
                   }
@@ -171,6 +186,9 @@ function appia_sched_data_block_render( $attributes ) {
 
             }
             $markup .= '</div>'; // end slot-dropzone
+            if ( isset( $slot[ 'shared' ] ) && $slot[ 'shared' ] ) {
+              break;
+            }
           }
         $markup .= '</div>'; // end slot
       }

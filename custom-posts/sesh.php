@@ -69,3 +69,14 @@ function appia_register_sesh_data_block_template() {
 }
 
 add_action( 'init', 'appia_register_sesh_data_block_template' );
+
+function appia_flush_sessions() {
+  appia_register_sesh();
+  flush_rewrite_rules();
+}
+register_activation_hook( PLUGIN_FILE_URL, 'appia_flush_sessions' );
+
+function appia_deflush_sessions() {
+  flush_rewrite_rules();
+}
+register_deactivation_hook( PLUGIN_FILE_URL, 'appia_deflush_sessions' );

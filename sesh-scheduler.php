@@ -11,11 +11,14 @@
 //    link-to-recording
 //    track-number
 $show_in_schedule = array(
-  'speakers'                  => true,
+  'speakers'                  => false,
   'description'               => false,
   'link-to-recording'         => true,
   'track-number'              => true,
 );
+
+// Defines constant which is useful for register_activation hook
+define( 'PLUGIN_FILE_URL', __FILE__ );
 
 // Assets file loads in js and css needed to render blocks in WP editor
 include( plugin_dir_path( __FILE__ ) . 'includes/sesh-assets.php');

@@ -61,3 +61,14 @@ function appia_register_sched_data_block_template() {
   $sched_object->template_lock = 'all';
 }
 add_action( 'init', 'appia_register_sched_data_block_template' );
+
+function appia_flush_schedules() {
+  appia_register_sched();
+  flush_rewrite_rules();
+}
+register_activation_hook( PLUGIN_FILE_URL, 'appia_flush_schedules' );
+
+function appia_deflush_schedules() {
+  flush_rewrite_rules();
+}
+register_deactivation_hook( PLUGIN_FILE_URL, 'appia_deflush_schedules' );

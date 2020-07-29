@@ -47,21 +47,52 @@ function appia_sesh_data_block_render( $attributes ) {
   $markup = '';
   $markup .= '<div class="session-post">';
 
-    $markup .= '<div class="session-speakers" style="white-space: pre-wrap;">';
-      $markup .= $speakers;
-    $markup .= '</div>';
+  if ( $speakers != '' ) {
+    $speaker_array = explode( "\n", $speakers );
+    $markup .= '<div class="speakers-container session-section">';
 
-    $markup .= '<div class="session-link">';
+      $markup .= '<div class="session-section-title">';
+        $markup .= 'Speakers';
+      $markup .= '</div>';
+
+      $markup .= '<div class="session-speakers">';
+        foreach( $speaker_array as $speaker_line) {
+          if ( $speaker_line != '' ) {   
+            $markup .= '<div class="session-speaker">';
+              $markup .= $speaker_line;
+            $markup .= '</div>';
+          }
+        }
+      $markup .= '</div>';
+    $markup .= '</div>';
+  }
+    
+  if ( $link != '' ) {
+    $markup .= '<div class="session-link session-section">';
+
+      $markup .= '<div class="session-section-title">';
+        $markup .= 'Session link';
+      $markup .= '</div>';
+
       $markup .= '<a href="' . $link . '" '
                   . 'aria-label="Watch recording of session '
                   . $name
                   . '">' . $link;
       $markup .= '</a>';
     $markup .= '</div>';
+  }
+    
+  if ( $desc != '' ) {
+    $markup .= '<div class="session-desc session-section">';
 
-    $markup .= '<div class="session-desc">';
+      $markup .= '<div class="session-section-title">';
+        $markup .= 'Session Description';
+      $markup .= '</div>';
+
       $markup .= $desc;
     $markup .= '</div>';
+  }
+    
 
   $markup .= '</div>';
 

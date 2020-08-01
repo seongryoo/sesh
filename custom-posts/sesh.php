@@ -42,21 +42,15 @@ add_action( 'init', 'appia_register_sesh' );
 
 // Register custom meta
 function appia_register_sesh_meta() {
-  $single = array(
+  $single_args = array(
     'show_in_rest'            => true,
     'single'                  => true,
     'type'                    => 'string',
   );
 
-  $multi = array(
-    'show_in_rest'            => true,
-    'single'                  => false,
-    'type'                    => 'string',
-  );
-
-  register_post_meta( 'post_sesh', 'post_sesh_meta_speakers', $single );
-  register_post_meta( 'post_sesh', 'post_sesh_meta_desc', $single );
-  register_post_meta( 'post_sesh', 'post_sesh_meta_link', $single );
+  register_post_meta( 'post_sesh', 'post_sesh_meta_speakers', $single_args );
+  register_post_meta( 'post_sesh', 'post_sesh_meta_desc', $single_args );
+  register_post_meta( 'post_sesh', 'post_sesh_meta_link', $single_args );
 }
 add_action( 'init', 'appia_register_sesh_meta' );
 

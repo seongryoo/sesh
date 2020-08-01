@@ -39,3 +39,36 @@ function appia_register_speaker() {
   add_post_type_support( 'post_speaker', $supports );
 }
 add_action( 'init', 'appia_register_speaker' );
+
+// Register custom meta
+function appia_register_speaker_meta() {
+  $single_args = array(
+    'show_in_rest'            => true,
+    'single'                  => true,
+    'type'                    => 'string',
+  );
+
+  $singles = array(
+    'role',
+    'img',
+    'desc',
+    'link',
+  );
+
+  foreach ( $singles as $slug ) {
+    $full_slug = 'post_speaker_meta_' . $slug;
+    register_post_meta( 'post_speaker', $full_slug, $single_args);
+  }
+}
+add_action( 'init', 'appia_register_speaker_meta' );
+
+function appia_speaker_change_title_text( $title ) {
+  $screen = get_current_screen();
+
+  if ( 'post_speaker' == $screen->post_type ) {
+    $title = 'Enter speaker \'s full name';
+  }
+
+  return $title;
+}
+add_filter( 'enter_title_here', 'appia_speaker_change_title_text' );

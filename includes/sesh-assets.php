@@ -6,6 +6,7 @@ function appia_load_block_assets() {
     'drag',
     'sesh-data',
     'sched-data',
+    'speaker-data',
   );
   $wp_deps = array(
     'wp-blocks',
@@ -18,6 +19,13 @@ function appia_load_block_assets() {
     $url = plugin_dir_url( __FILE__ ) . '../editor-assets/js/' . $slug . '.js';
     wp_enqueue_script( $script_name, $url, $wp_deps );
   }
+  wp_localize_script( 
+    'appia-speaker-data', 
+    'scriptData', 
+    array(
+      'pluginUrl' => plugin_dir_url( __FILE__ ) . '../',
+    ) 
+  );
 
   $styles = array(
     'admin',

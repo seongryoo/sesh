@@ -60,22 +60,14 @@
             + 'Make some speaker posts to get started!'
       );
     } else {
-      // console.log(props.speakers);
       const speakerArray = [];
       const selectedSpeakers = getAttr('speakers');
-      // console.log(selectedSpeakers)
       const isSelectedIndex = function(speaker) {
         for (const [index, value] of selectedSpeakers.entries()) {
-          // console.log('value')
-          // console.log(value)
-          // console.log('othervalue')
-          // console.log(speaker)
           if (value == speaker) {
-            // console.log(index)
             return index;
           }
         }
-        // console.log(-1)
         return -1;
       };
       const isSelected = function(speaker) {
@@ -97,7 +89,6 @@
                   selectedSpeakers.push(id);
                 }
                 storeAttr('speakers', selectedSpeakers);
-                // console.log(selectedSpeakers)
               },
               label: name,
             }
@@ -146,16 +137,34 @@
       value: props.attributes.link,
     };
     const link = elWrap(TextControl, linkArgs);
-    const speakersArgs = {
-      onChange: function(value) {
-        props.setAttributes({speakers: value});
-      },
-      label: 'Speaker list:',
-      help: 'Type a list of names, starting a new line for each new person',
-      placeholder: 'Type here...',
-      value: props.attributes.speakers,
+    const chosenSpeakers = getAttr('speakers');
+    const elSpeakerArray = [];
+    const getSpeakerById = function(id) {
+      for (const speaker of props.speakers) {
+        if (speaker.id == id) {
+          return speaker;
+        }
+      }
     };
-    const speakers = elWrap(TextareaControl, speakersArgs);
+    for (const speakerId of chosenSpeakers) {
+      const speaker = getSpeakerById(speakerId);
+      const name = speaker.title.raw;
+      const elSpeaker = el(
+          'div',
+          {
+
+          },
+          name
+      );
+      elSpeakerArray.push(elSpeaker);
+    }
+    const speakers = elWrap(
+        'div',
+        {
+
+        },
+        [elSpeakerArray]
+    );
     // Description field
     const descArgs = {
       onChange: function(value) {

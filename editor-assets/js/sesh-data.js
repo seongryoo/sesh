@@ -3,7 +3,75 @@
   const registerBlock = wp.blocks.registerBlockType;
   const TextControl = wp.components.TextControl;
   const TextareaControl = wp.components.TextareaControl;
-  const seshEdit = function(props) {
+  // Select function for db call
+  const withSelect = wp.data.withSelect;
+  const fetchSpeakers = withSelect(function(select) {
+    const queryArgs = {
+      per_page: -1,
+      status: 'publish',
+    };
+    const posts = select('core').getEntityRecords(
+        'postType',
+        'post_speaker',
+        queryArgs
+    );
+    return {
+      speakers: posts,
+    };
+  });
+  const seshEdit = fetchSpeakers(function(props) {
+    let speakerList;
+    if (!props.speakers) {
+      return 'Fetching speakers...';
+    }
+    if (props.speakers.length == 0) {
+      speakerList = el(
+          'div',
+          {},
+          'Could not find any speakers to work with. '
+            + 'Make some speaker posts to get started!'
+      );
+    } else {
+      console.log(props.speakers);
+      const speakerArray = [];
+      for (const speaker of props.speakers) {
+        const name = speaker.title.raw;
+        const imgUrl = speaker
+            .meta
+            .post_speaker_meta_img_url;
+        const id = speaker.id;
+        const elName = el(
+            'div',
+            {
+              className: 'speaker-select-name',
+            },
+            name
+        );
+        const elImg = el(
+            'img',
+            {
+              className: 'speaker-select-img',
+              src: imgUrl,
+            }
+        );
+        const elDiv = el(
+            'div',
+            {
+              'className': 'speaker-select',
+              'data-id': id,
+            },
+            [elImg, elName]
+        );
+        speakerArray.push(elDiv);
+      }
+      speakerList = el(
+          'div',
+          {
+            className: 'speakers-select',
+          },
+          speakerArray
+      );
+    }
     // Helper method that generates appia field wrapper
     const elWrap = function(element, args, value) {
       let generatedElement;
@@ -66,51 +134,20 @@
         'Session description:'
     );
     const descWrapped = elWrap('div', {}, [descLabel, desc]);
-    // const descLabelled = el(
-    //     'div',
-    //     {
-    //       className: 'appi-field appia-field-text',
-    //     },
-    //     [descLabel, desc]
-    // );
-    // const descWrapped = el(
-    //     'div',
-    //     {
-    //       className: 'appia-field-wrapper appia-field-desc',
-    //     },
-    //     descLabelled
-    // );
     // The final element
     return el(
         'div',
         {
           className: 'appia-blocks',
         },
-        [link, speakers, descWrapped]
+        [speakerList, link, speakers, descWrapped]
     );
-  };
+  });
 
   const seshArgs = {
     title: 'Session Data',
     category: 'appia-blocks',
     icon: 'tickets-alt',
-    // attributes: {
-    //   speakers: {
-    //     type: 'string',
-    //     source: 'meta',
-    //     meta: 'post_sesh_meta_speakers',
-    //   },
-    //   desc: {
-    //     type: 'string',
-    //     source: 'meta',
-    //     meta: 'post_sesh_meta_desc',
-    //   },
-    //   link: {
-    //     type: 'string',
-    //     source: 'meta',
-    //     meta: 'post_sesh_meta_link',
-    //   },
-    // }, /* End attributes */
     edit: seshEdit,
     save: function(props) {
       return null;

@@ -19,7 +19,7 @@
     // Get session post types from wordpress db
     const queryArgs = {
       per_page: -1,
-      status: 'publish,future,draft,pending,private',
+      status: 'publish',
     };
     const posts = select('core').getEntityRecords(
         'postType',

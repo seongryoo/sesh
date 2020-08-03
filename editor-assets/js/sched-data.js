@@ -51,9 +51,12 @@
     const getAttr = function(attr) {
       if (props.attributes[attr] != '') {
         const theString = props.attributes[attr];
-        const theJSON = JSON.parse(theString);
-        // console.log(theJSON.data)
-        return theJSON.data;
+        try {
+          const theJSON = JSON.parse(theString);
+          return theJSON.data;
+        } catch (e) {
+          return [];
+        }
       } else {
         const emptyArray = [];
         return emptyArray;

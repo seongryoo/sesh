@@ -2,12 +2,14 @@
   const el = wp.element.createElement;
   const registerBlock = wp.blocks.registerBlockType;
   const TextControl = wp.components.TextControl;
+  const CheckboxControl = wp.components.CheckboxControl;
   const TextareaControl = wp.components.TextareaControl;
   // Select function for db call
   const withSelect = wp.data.withSelect;
   const fetchSpeakers = withSelect(function(select) {
     const queryArgs = {
-      per_page: -1,
+      per_page: 5,
+      offset: 0,
       status: 'publish',
     };
     const posts = select('core').getEntityRecords(
@@ -20,6 +22,32 @@
     };
   });
   const seshEdit = fetchSpeakers(function(props) {
+    const getAttr = function(attr) {
+      if (props.attributes[attr] != '') {
+        const theString = props.attributes[attr];
+        try {
+          const theJSON = JSON.parse(theString);
+          return theJSON.data;
+        } catch (e) {
+          console.log('Empty data returned warning!');
+          return [];
+        }
+      } else {
+        const emptyArray = [];
+        return emptyArray;
+      }
+    };
+    // Helper method which stores JSON object as string attribute
+    const storeAttr = function(attr, value) {
+      const theJSON = {
+        data: value,
+      };
+      const theString = JSON.stringify(theJSON);
+      props.setAttributes({
+        [attr]: theString,
+      });
+    };
+    // Speaker list
     let speakerList;
     if (!props.speakers) {
       return 'Fetching speakers...';
@@ -32,35 +60,52 @@
             + 'Make some speaker posts to get started!'
       );
     } else {
-      console.log(props.speakers);
+      // console.log(props.speakers);
       const speakerArray = [];
+      const selectedSpeakers = getAttr('speakers');
+      // console.log(selectedSpeakers)
+      const isSelectedIndex = function(speaker) {
+        for (const [index, value] of selectedSpeakers.entries()) {
+          // console.log('value')
+          // console.log(value)
+          // console.log('othervalue')
+          // console.log(speaker)
+          if (value == speaker) {
+            // console.log(index)
+            return index;
+          }
+        }
+        // console.log(-1)
+        return -1;
+      };
+      const isSelected = function(speaker) {
+        return isSelectedIndex(speaker) != -1;
+      };
+
       for (const speaker of props.speakers) {
         const name = speaker.title.raw;
-        const imgUrl = speaker
-            .meta
-            .post_speaker_meta_img_url;
         const id = speaker.id;
-        const elName = el(
-            'div',
+        const elCheck = el(
+            CheckboxControl,
             {
-              className: 'speaker-select-name',
-            },
-            name
-        );
-        const elImg = el(
-            'img',
-            {
-              className: 'speaker-select-img',
-              src: imgUrl,
+              checked: isSelected(id),
+              onChange: function(value) {
+                if (isSelected(id)) {
+                  const index = isSelectedIndex(id);
+                  selectedSpeakers.splice(index, 1);
+                } else {
+                  selectedSpeakers.push(id);
+                }
+                storeAttr('speakers', selectedSpeakers);
+                // console.log(selectedSpeakers)
+              },
+              label: name,
             }
         );
         const elDiv = el(
             'div',
-            {
-              'className': 'speaker-select',
-              'data-id': id,
-            },
-            [elImg, elName]
+            {},
+            elCheck
         );
         speakerArray.push(elDiv);
       }

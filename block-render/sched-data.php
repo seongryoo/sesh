@@ -163,9 +163,9 @@ function appia_sched_data_block_render( $attributes ) {
                   if ( appia_in_schedule( 'link-to-recording' ) ) {
                     $markup .= '<div class="watch-session">';
                       $markup .= '<a href="' . $sesh_watch_link . '" '
-                                 . 'aria-label="Link to join '
+                                 . 'aria-label="Link to the recording of '
                                  . $sesh_name . '">';
-                        $markup .= 'Join/watch session';
+                        $markup .= 'View recording';
                       $markup .= '</a>';
                     $markup .= '</div>';
                   }

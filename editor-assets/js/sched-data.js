@@ -47,7 +47,6 @@
         }
       }
     };
-    // Helper method which pulls attribute data and converts to JSON
     const getAttr = function(attr) {
       if (props.attributes[attr] != '') {
         const theString = props.attributes[attr];

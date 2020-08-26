@@ -3,6 +3,9 @@
   const registerBlock = wp.blocks.registerBlockType;
   const TextControl = wp.components.TextControl;
   const CheckboxControl = wp.components.CheckboxControl;
+  const Autocomplete = wp.components.Autocomplete;
+  const apiFetch = wp.apiFetch;
+  const RichText = wp.blockEditor.RichText;
   // Select function for db call
   const withSelect = wp.data.withSelect;
   const fetchSpeakers = withSelect(function(select) {
@@ -46,75 +49,48 @@
         [attr]: theString,
       });
     };
-    // Speaker list
-    let speakerList;
-    if (!props.speakers) {
-      return 'Fetching speakers...';
-    }
-    if (props.speakers.length == 0) {
-      speakerList = el(
-          'div',
-          {},
-          'Could not find any speakers to work with. '
-            + 'Make some speaker posts to get started!'
-      );
-    } else {
-      const speakerArray = [];
-      const selectedSpeakers = getAttr('speakers');
-      const isSelectedIndex = function(speaker) {
-        for (const [index, value] of selectedSpeakers.entries()) {
-          if (value == speaker) {
-            return index;
-          }
-        }
-        return -1;
-      };
-      const isSelected = function(speaker) {
-        return isSelectedIndex(speaker) != -1;
-      };
 
-      for (const speaker of props.speakers) {
-        const name = speaker.title.raw;
-        const id = speaker.id;
-        const elCheck = el(
-            CheckboxControl,
-            {
-              checked: isSelected(id),
-              onChange: function(value) {
-                if (isSelected(id)) {
-                  const index = isSelectedIndex(id);
-                  selectedSpeakers.splice(index, 1);
-                } else {
-                  selectedSpeakers.push(id);
-                }
-                storeAttr('speakers', selectedSpeakers);
-              },
-              label: name,
-            }
-        );
-        const elDiv = el(
-            'div',
-            {},
-            elCheck
-        );
-        speakerArray.push(elDiv);
-      }
-      speakerList = el(
-          'div',
-          {
-            className: 'speakers-select',
-          },
-          speakerArray
-      );
-    }
-    const speakerAutocomplete = el(
-        TextControl,
+    const SpeakersAutocomplete = () => {
+      const speakerAutocompleters = [
         {
-          onChange: function(value) {
-            
-          }
-        }
+  name: 'users',
+  className: 'editor-autocompleters__user',
+  triggerPrefix: '~',
+  options( search ) {
+    let payload = '';
+    if ( search ) {
+      payload = '?search=' + encodeURIComponent( search );
+    }
+    console.log(apiFetch( { path: '/wp/v2/users' + payload } ));
+    return apiFetch( { path: '/wp/v2/users' + payload } );
+  },
+  isDebounced: true,
+  getOptionKeywords( user ) {
+    return [ user.slug, user.name ];
+  },
+  getOptionLabel( user ) {
+    return el(
+      'p',
+      {},
+      user.name
     );
+  },
+  getOptionCompletion( user ) {
+    return `~${ user.slug }`;
+  },
+        }
+      ];
+      const auto = el(
+        RichText,
+        {
+          autocompleters: speakerAutocompleters,
+        }
+      );
+
+      return auto;
+    }
+
+
     // Helper method that generates appia field wrapper
     const elWrap = function(element, args, value) {
       let generatedElement;
@@ -144,34 +120,6 @@
       value: props.attributes.link,
     };
     const link = elWrap(TextControl, linkArgs);
-    const chosenSpeakers = getAttr('speakers');
-    const elSpeakerArray = [];
-    const getSpeakerById = function(id) {
-      for (const speaker of props.speakers) {
-        if (speaker.id == id) {
-          return speaker;
-        }
-      }
-    };
-    for (const speakerId of chosenSpeakers) {
-      const speaker = getSpeakerById(speakerId);
-      const name = speaker.title.raw;
-      const elSpeaker = el(
-          'div',
-          {
-
-          },
-          name
-      );
-      elSpeakerArray.push(elSpeaker);
-    }
-    const speakers = elWrap(
-        'div',
-        {
-
-        },
-        [elSpeakerArray]
-    );
     // Description field
     const descArgs = {
       onChange: function(value) {
@@ -195,13 +143,18 @@
         'Session description:'
     );
     const descWrapped = elWrap('div', {}, [descLabel, desc]);
+    
+    const speakerList = el(
+      SpeakersAutocomplete,
+      {},
+    );
     // The final element
     return el(
         'div',
         {
           className: 'appia-blocks',
         },
-        [speakerList, link, speakers, descWrapped]
+        [speakerList, link, descWrapped]
     );
   });
 

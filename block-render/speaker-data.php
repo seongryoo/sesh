@@ -34,6 +34,7 @@ function appia_register_speaker_data_block() {
         'meta' => 'post_speaker_meta_link',
       ),
     ),
+    'editor_script' => 'appia-speaker-data',
     'render_callback' => 'appia_speaker_data_block_render',
   );
 
@@ -43,5 +44,30 @@ add_action( 'init', 'appia_register_speaker_data_block' );
 
 // Rendering
 function appia_speaker_data_block_render( $attributes ) {
-  return 'what';
+
+  global $post;
+  $id = $post->ID;
+
+  $name = get_the_title( $id );
+  $role = get_post_meta( $id, 'post_speaker_meta_role', true );
+  $img_url = get_post_meta( $id, 'post_speaker_meta_img_url', true);
+  $link = get_post_meta( $id, 'post_speaker_meta_link', true);
+  $desc = get_post_meta( $id, 'post_speaker_meta_desc', true);
+
+  $markup = '';
+
+  $markup .= '<div class="appia-speaker">';
+
+    $markup .= '<img src="' . $img_url . '" aria-label="' . $name . '" class="appia-speaker-image">';
+
+    $markup .= '<a href="' . esc_url( $link ) . '" aria-label="Open website of ' . $name . '" class="appia-speaker-site">';
+      $markup .= 'Website';
+    $markup .= '</a>';
+
+    $markup .= '<div class="appia-speaker-desc">';
+      $markup .= $desc;
+    $markup .= '</div>';
+
+  $markup .= '</div>';
+  return $markup;
 }

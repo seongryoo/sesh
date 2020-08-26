@@ -3,7 +3,6 @@
   const registerBlock = wp.blocks.registerBlockType;
   const TextControl = wp.components.TextControl;
   const CheckboxControl = wp.components.CheckboxControl;
-  const TextareaControl = wp.components.TextareaControl;
   // Select function for db call
   const withSelect = wp.data.withSelect;
   const fetchSpeakers = withSelect(function(select) {
@@ -108,6 +107,14 @@
           speakerArray
       );
     }
+    const speakerAutocomplete = el(
+        TextControl,
+        {
+          onChange: function(value) {
+            
+          }
+        }
+    );
     // Helper method that generates appia field wrapper
     const elWrap = function(element, args, value) {
       let generatedElement;

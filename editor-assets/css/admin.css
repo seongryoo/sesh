@@ -1,89 +1,18 @@
-/* Pretty background color for gutenberg editor */
-.post-type-post_sesh
- .block-editor__container {
-  background: #bddee2;
-}
-
-/* Overriding gutenberg title block */
-.post-type-post_sesh
- .editor-post-title__block > div:nth-child(1) {
-  margin: 0;
-  border-radius: 0.5rem;
-  padding: 1rem 1.5rem;
-  background: white;
-  font-size: 2rem;
-  box-shadow: 0 10px 25px 2px rgba(0, 0, 0, 0.1);
-  font-family: -apple-system,
-                BlinkMacSystemFont,
-                Segoe UI,
-                Roboto,
-                Oxygen-Sans,
-                Ubuntu,
-                Cantarell,
-                Helvetica Neue,
-                sans-serif;
-}
-.post-type-post_sesh
- .editor-post-title__block > div:nth-child(1)
- label.screen-reader-text {
-  display: block;
-  clip: inherit;
-  clip-path: inherit;
-  position: inherit;
-  width: auto;
-  height: auto;
-  overflow: visible;
-  font-size: 1.25rem;
-  margin-bottom: 8px;
-}
-.post-type-post_sesh
- .editor-post-title__block > div:nth-child(1)
- label.screen-reader-text:after {
-  content: ':';
-}
-.post-type-post_sesh
- .editor-post-title__block
- textarea {
-  font-family: -apple-system,
-                BlinkMacSystemFont,
-                Segoe UI,
-                Roboto,
-                Oxygen-Sans,
-                Ubuntu,
-                Cantarell,
-                Helvetica Neue,
-                sans-serif;
-  margin-top: 1rem;
-  box-sizing: border-box;
-  font-size: 2rem;
-  font-weight: bold;
-  border-radius: 0;
-  border-bottom: 2px solid lightgray;
-  padding: 3px 0 3px 0;
-  color: #666666;
-  transition: all 0.1s;
-  box-shadow: none !important;
-  border-top: none;
-  border-right: none;
-}
-.post-type-post_sesh
- .editor-post-title__block
- textarea:focus {
-  padding: 0 0 6px 0;
-  box-shadow: none !important;
-  border-top: none;
-  border-right: none;
-  border-bottom: 4px solid #1989c1 !important;
-  color: black;
-  box-shadow: none;
-}
-
 /* Styling for text input blocks */
 .appia-field-block .components-base-control__help {
   margin: 0;
   color: #757575;
 }
-
+.appia-field-block .hint {
+  margin-top: -1.5rem;
+  margin-bottom: 1.5rem;
+  color: #757575;
+  font-style: italic;
+}
+.appia-blocks .components-base-control .components-base-control__field + .components-base-control__field {
+  margin-top: 16px;
+  margin-bottom: 0;
+}
 .appia-blocks .appia-field-block {
   font-family: Segoe UI, sans-serif;
   margin-bottom: 1em;
@@ -96,8 +25,10 @@
   box-shadow: 0 10px 25px 2px rgba(0, 0, 0, 0.1);
 }
 
-.appia-blocks .appia-field-block label {
+.appia-blocks .appia-field-block label:nth-child(1) {
   font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  display: block;
 }
 .appia-blocks .appia-field-block p,
 .appia-blocks .appia-field-block input {
@@ -105,7 +36,7 @@
 }
 
 .appia-input__rich-text {
-  margin-top: 1em;
+  font-size: 1rem;
   border-radius: 0;
   border: none;
   border-bottom: 2px solid lightgray;
@@ -130,8 +61,8 @@
 }
 
 .appia-field-block input[type="text"] {
+  font-size: 1rem;
   padding: 0;
-  margin-top: 1em;
   border-radius: 0;
   border: none;
   padding-top: 8px;
@@ -152,11 +83,6 @@
 
 .appia-field-block input[type="text"]::placeholder {
   color: rgba(0, 0, 0, 0.54);
-}
-
-.appia-field-block label {
-  display: block;
-  margin-bottom: 8px;
 }
 
 .block-editor-block-list__layout 
@@ -220,3 +146,82 @@
   padding: 0.25em;
   margin: 0;
  }
+
+/* Checkboxes */
+.appia-blocks .appia-checkbox span,
+.appia-blocks .appia-radio input {
+  position: absolute;
+}
+.appia-blocks .appia-checkbox label,
+.appia-blocks .appia-checkbox p,
+.appia-blocks .appia-radio .components-radio-control__option label {
+  font-size: 1.1rem;
+  margin-left: 1.75rem;
+}
+.appia-blocks .appia-checkbox label {
+  font-weight: 600;
+}
+
+.appia-checkbox .components-base-control__field {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0;
+}
+
+.components-base-control.appia-checkbox {
+  margin-bottom: 24px;
+}
+
+.appia-blocks .appia-radio .components-radio-control__option {
+  display: flex;
+  align-items: center;
+}
+
+.appia-expiration .components-datetime__date {
+  margin-top: 24px;
+}
+
+body.post-type-post_opp .wp-block {
+  max-width: 992px;
+}
+
+body.post-type-post_speaker {
+  background: aliceblue;
+}
+
+.block-editor-block-list__layout 
+ .appia-blocks
+ button.components-button.upload-button {
+  color: rgb(0, 124, 186);
+  font-size: 0.75em;
+  padding: 1.25em 1em;
+  border: 2px solid rgb(0, 124, 186);
+  transition: border 0.25s, color 0.25s, background 0.25s;
+}
+
+.block-editor-block-list__layout 
+ .appia-blocks
+ button.components-button.upload-button 
+ span {
+  margin-right: 0.2em;
+}
+
+.block-editor-block-list__layout 
+ .appia-blocks
+ button.components-button.upload-button:focus,
+.block-editor-block-list__layout 
+ .appia-blocks
+ button.components-button.upload-button:hover {
+  background: #1989c1 !important;
+  border: 2px solid #1989c1 !important;
+  color: white !important;
+  box-shadow: none !important;
+}
+
+.block-editor-block-list__layout 
+ .appia-blocks
+ img.uploaded-image-display {
+  max-width: 250px;
+  display: block;
+  margin: 1em 0;
+}

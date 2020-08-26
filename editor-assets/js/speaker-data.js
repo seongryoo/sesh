@@ -2,7 +2,6 @@
   const el = wp.element.createElement;
   const registerBlock = wp.blocks.registerBlockType;
   const TextControl = wp.components.TextControl;
-  const TextareaControl = wp.components.TextareaControl;
   const RichText = wp.blockEditor.RichText;
   const Button = wp.components.Button;
   const MediaUpload = wp.blockEditor.MediaUpload;
@@ -26,28 +25,60 @@
           generatedElement
       );
     }; // End elWrap()
-    // Role/title field
-    const roleArgs = {
-      onChange: function(value) {
-        props.setAttributes({role: value});
-      },
-      label: 'Position/affiliated organization descriptions:',
-      placeholder: 'Start typing...',
-      className: 'appia-input__text',
-      value: props.attributes.role,
+
+    const generateTextField = function(attribute, label) {
+      const elText = elWrap(
+          TextControl,
+          {
+            value: props.attributes[attribute],
+            onChange: function(value) {
+              props.setAttributes({
+                [attribute]: value,
+                className: 'appia-input__text',
+              });
+            },
+            placeholder: 'Start typing...',
+            label: label,
+          }
+      );
+      return elText;
     };
-    const roleWrapped = elWrap(TextareaControl, roleArgs);
-    // Profile link field
-    const linkArgs = {
-      onChange: function(value) {
-        props.setAttributes({link: value});
-      },
-      label: 'Link to speaker personal website or profile:',
-      placeholder: 'Enter a URL...',
-      className: 'appia-input__text',
-      value: props.attributes.link,
+    const generateRichText = function(attribute, label) {
+      const elText = el(
+          RichText,
+          {
+            value: props.attributes[attribute],
+            onChange: function(value) {
+              props.setAttributes({
+                [attribute]: value,
+              });
+            },
+            placeholder: 'Start typing...',
+            id: 'richtext-' + attribute,
+            className: 'appia-input__rich-text',
+            multiline: true,
+          }
+      );
+      const elHint = el(
+          'p',
+          {
+            className: 'hint',
+          },
+          'Hint: you can insert links or use bold/italic text'
+      );
+      const elLabel = el(
+          'label',
+          {
+            for: 'richtext-' + attribute,
+          },
+          label
+      );
+      return elWrap(
+          'div',
+          {},
+          [elLabel, elHint, elText]
+      );
     };
-    const linkWrapped = elWrap(TextControl, linkArgs);
     // Image attribute
     const placeHolderUrl = scriptData.pluginUrl + 'editor-assets/img/image.png';
     // Upload icon
@@ -112,42 +143,22 @@
         },
         [imgLabel, imgWrapped, imgDisplay]
     );
-    // Description field
-    const descArgs = {
-      onChange: function(value) {
-        props.setAttributes({desc: value});
-      },
-      value: props.attributes.desc,
-      multiline: true,
-      className: 'appia-input__rich-text',
-      id: 'appia-speaker-desc',
-      placeholder: 'Start typing...',
-    };
-    const desc = el(
-        RichText,
-        descArgs
-    );
-    const descLabel = el(
-        'label',
-        {
-          for: 'appia-speaker-desc',
-        },
-        'Speaker description:'
-    );
-    const descWrapped = elWrap('div', {}, [descLabel, desc]);
+    const role = generateRichText('role', 'Position or affiliated organization(s)');
+    const profile = generateTextField('link', 'Link to speaker\'s personal website or profile');
+    const desc = generateRichText('desc', 'Speaker description');
     // Final element
     return el(
         'div',
         {
           className: 'appia-blocks',
         },
-        [roleWrapped, linkWrapped, uploadImageBlock, descWrapped]
+        [role, profile, uploadImageBlock, desc]
     );
   }; // End speakerEdit()
   const speakerArgs = {
     title: 'Speaker Data',
     category: 'appia-blocks',
-    icon: 'businesswoman',
+    icon: 'id',
     edit: speakerEdit,
     save: function(props) {
       return null;

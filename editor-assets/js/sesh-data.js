@@ -4,6 +4,7 @@
   const TextControl = wp.components.TextControl;
   const CheckboxControl = wp.components.CheckboxControl;
   const Autocomplete = wp.components.Autocomplete;
+  const Button = wp.components.Button;
   const apiFetch = wp.apiFetch;
   const RichText = wp.blockEditor.RichText;
   // Select function for db call
@@ -24,6 +25,13 @@
     };
   });
   const seshEdit = fetchSpeakers(function(props) {
+    if (!props.speakers) {
+      return 'Fetching speakers...';
+    }
+    if (props.speakers.length == 0) {
+      return 'Could not find any speakers to work with.'
+        + ' Make some speaker posts to get started!';
+    }
     const getAttr = function(attr) {
       if (props.attributes[attr] != '') {
         const theString = props.attributes[attr];
@@ -49,48 +57,6 @@
         [attr]: theString,
       });
     };
-
-    const SpeakersAutocomplete = () => {
-      const speakerAutocompleters = [
-        {
-  name: 'users',
-  className: 'editor-autocompleters__user',
-  triggerPrefix: '~',
-  options( search ) {
-    let payload = '';
-    if ( search ) {
-      payload = '?search=' + encodeURIComponent( search );
-    }
-    console.log(apiFetch( { path: '/wp/v2/users' + payload } ));
-    return apiFetch( { path: '/wp/v2/users' + payload } );
-  },
-  isDebounced: true,
-  getOptionKeywords( user ) {
-    return [ user.slug, user.name ];
-  },
-  getOptionLabel( user ) {
-    return el(
-      'p',
-      {},
-      user.name
-    );
-  },
-  getOptionCompletion( user ) {
-    return `~${ user.slug }`;
-  },
-        }
-      ];
-      const auto = el(
-        RichText,
-        {
-          autocompleters: speakerAutocompleters,
-        }
-      );
-
-      return auto;
-    }
-
-
     // Helper method that generates appia field wrapper
     const elWrap = function(element, args, value) {
       let generatedElement;
@@ -109,6 +75,114 @@
           generatedElement
       );
     };
+    // Getting autocompleting speakers
+    const speakerAutocompleters = [
+      {
+        name: 'speakers',
+        className: 'editor-autocompleters__speaker',
+        triggerPrefix: '',
+        options: function(search) {
+          let payload = '';
+          if (search) {
+            payload = '?search=' + encodeURIComponent(search);
+          }
+          // console.log(apiFetch( { path: '/wp/v2/users' + payload } ));
+          return apiFetch(
+              {
+                path: '/wp/v2/post_speaker' + payload,
+              }
+          );
+        },
+        isDebounced: true,
+        getOptionKeywords: function(speaker) {
+          return [speaker.title.rendered];
+        },
+        getOptionLabel: function(speaker) {
+          return el(
+              'p',
+              {},
+              speaker.title.rendered
+          );
+        },
+        getOptionCompletion: function(speaker) {
+          console.log(speaker);
+          const newSpeakers = getAttr('speakers');
+          newSpeakers.push(speaker.id);
+          storeAttr('speakers', newSpeakers);
+          console.log(newSpeakers)
+          return '';
+        },
+      },
+    ];
+    const speakerAutocomplete = el(
+        RichText,
+        {
+          autocompleters: speakerAutocompleters,
+          placeholder: 'Search for speakers...',
+        }
+    );
+    const getSpeakerById = function(id) {
+      for (const speaker of props.speakers) {
+        if (speaker.id == id) {
+          return speaker;
+        }
+      }
+    };
+    // Generic delete button text
+    const removeText = function(msg) {
+      return el(
+          'div',
+          {
+            'className': 'button-remove-text',
+            'aria-label': msg,
+          },
+          ''
+      );
+    };
+    const drawSpeakers = function() {
+      const speakersObj = getAttr('speakers');
+      console.log("WHAT")
+      console.log(speakersObj)
+      const renderArr = [];
+      for (const [speakerIndex, speakerId] of speakersObj.entries()) {
+        const speaker = getSpeakerById(speakerId);
+        const speakerName = el(
+            'p',
+            {},
+            speaker.title.rendered
+        );
+        const removeSpeaker = el(
+            Button,
+            {
+              onClick: function() {
+                speakersObj.splice(speakerIndex, 1);
+                console.log(speakersObj)
+                storeAttr('speakers', speakersObj);
+              },
+            },
+            removeText('Remove this speaker from the session')
+        );
+        const chosenSpeaker = el(
+            'div',
+            {
+              className: 'appia-chosen-speakers',
+            },
+            [speakerName, removeSpeaker]
+        );
+        renderArr.push(chosenSpeaker);
+      }
+      return renderArr;
+    };
+    const chosenSpeakers = el(
+        'div',
+        {},
+        drawSpeakers()
+    );
+    const speakers = elWrap(
+        'div',
+        {},
+        [speakerAutocomplete, chosenSpeakers]
+    );
     // Session link
     const linkArgs = {
       onChange: function(value) {
@@ -144,17 +218,13 @@
     );
     const descWrapped = elWrap('div', {}, [descLabel, desc]);
     
-    const speakerList = el(
-      SpeakersAutocomplete,
-      {},
-    );
     // The final element
     return el(
         'div',
         {
           className: 'appia-blocks',
         },
-        [speakerList, link, descWrapped]
+        [speakers, link, descWrapped]
     );
   });
 

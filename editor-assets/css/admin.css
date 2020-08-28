@@ -147,6 +147,8 @@
   margin: 0;
  }
 
+/* Special fields and forms*/
+
 /* Checkboxes */
 .appia-blocks .appia-checkbox span,
 .appia-blocks .appia-radio input {
@@ -161,24 +163,89 @@
 .appia-blocks .appia-checkbox label {
   font-weight: 600;
 }
-
 .appia-checkbox .components-base-control__field {
   display: flex;
   align-items: center;
   margin-bottom: 0;
 }
-
 .components-base-control.appia-checkbox {
   margin-bottom: 24px;
 }
 
-.appia-blocks .appia-radio .components-radio-control__option {
+/* Date time picker*/
+.appia-expiration .components-datetime__date {
+  margin-top: 24px;
+}
+
+/* Search bar */
+.appia-search-bar {
+  padding: 0.5em 1em;
+  border-radius: 0.25em;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.5);
+  background: white;
+  display: flex;
+  margin-bottom: 1em;
+  transition: box-shadow 0.5s;
+}
+.appia-search-bar:focus {
+  box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.5);
+}
+.appia-search-bar:before {
+  content: "\f179";
+  font-family: 'dashicons';
+  margin-right: 0.5em;
+  display: block;
+  flex: 0 1 auto;
+}
+
+/* Search results */
+.appia-auto-option {
+  display: flex;
+  align-items: center;
+}
+.appia-auto-option img {
+  width: 3em;
+  height: 3em;
+  object-fit: cover;
+  border-radius: 3em;
+  margin-right: 1em;
+}
+
+/* Chosen speakers */
+.appia-chosen-speakers {
+  display: inline-block;
+  color: rgb(0, 124, 186);
+  font-size: 1em;
+  padding: 0.25em 1em;
+  border-radius: 2em;
+  border: 3px solid rgb(0, 124, 186);
+  margin-right: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.appia-chosen-speakers > div {
   display: flex;
   align-items: center;
 }
 
-.appia-expiration .components-datetime__date {
-  margin-top: 24px;
+.appia-chosen-speakers > div p {
+  margin: 0;
+  font-weight: 600;
+}
+
+.appia-chosen-speakers button.speaker-remove {
+  margin-left: 0.5em;
+  padding: 0;
+}
+
+.appia-chosen-speakers button > div {
+  font-size: 2em;
+  color: lightgray;
+  line-height: 1;
+}
+.appia-chosen-speakers button:hover > div,
+.appia-chosen-speakers button:focus > div {
+  color: crimson;
 }
 
 body.post-type-post_opp .wp-block {
@@ -186,6 +253,9 @@ body.post-type-post_opp .wp-block {
 }
 
 body.post-type-post_speaker {
+  background: aliceblue;
+}
+body.post-type-post_sesh {
   background: aliceblue;
 }
 

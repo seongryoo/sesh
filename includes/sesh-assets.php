@@ -26,6 +26,13 @@ function appia_load_block_assets() {
       'pluginUrl' => plugin_dir_url( __FILE__ ) . '../',
     ) 
   );
+  wp_localize_script( 
+    'appia-sesh-data', 
+    'scriptData', 
+    array(
+      'pluginUrl' => plugin_dir_url( __FILE__ ) . '../',
+    ) 
+  );
 
   $styles = array(
     'admin',

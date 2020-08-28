@@ -1,9 +1,7 @@
-(function(wp) {
+(function(wp, scriptData) {
   const el = wp.element.createElement;
   const registerBlock = wp.blocks.registerBlockType;
   const TextControl = wp.components.TextControl;
-  const CheckboxControl = wp.components.CheckboxControl;
-  const Autocomplete = wp.components.Autocomplete;
   const Button = wp.components.Button;
   const apiFetch = wp.apiFetch;
   const RichText = wp.blockEditor.RichText;
@@ -86,30 +84,47 @@
           if (search) {
             payload = '?search=' + encodeURIComponent(search);
           }
-          // console.log(apiFetch( { path: '/wp/v2/users' + payload } ));
           return apiFetch(
               {
                 path: '/wp/v2/post_speaker' + payload,
               }
           );
         },
-        isDebounced: true,
         getOptionKeywords: function(speaker) {
           return [speaker.title.rendered];
         },
         getOptionLabel: function(speaker) {
-          return el(
+          const name = el(
               'p',
               {},
               speaker.title.rendered
           );
+          const imageLink = speaker.meta.post_speaker_meta_img_url;
+          // Image attribute
+          const placeHolderUrl = scriptData.pluginUrl
+            + 'editor-assets/img/image.png';
+          const img = el(
+              'img',
+              {
+                src: imageLink != '' ? imageLink : placeHolderUrl,
+                alt: speaker.title.rendered,
+              }
+          );
+          return el(
+              'div',
+              {
+                className: 'speaker-option appia-auto-option',
+              },
+              [img, name]
+          );
+        },
+        allowContext: function(value) {
+          return value != '';
         },
         getOptionCompletion: function(speaker) {
-          console.log(speaker);
           const newSpeakers = getAttr('speakers');
           newSpeakers.push(speaker.id);
           storeAttr('speakers', newSpeakers);
-          console.log(newSpeakers)
           return '';
         },
       },
@@ -119,6 +134,10 @@
         {
           autocompleters: speakerAutocompleters,
           placeholder: 'Search for speakers...',
+          className: 'appia-search-bar',
+          onChange: function(value) {
+            return;
+          },
         }
     );
     const getSpeakerById = function(id) {
@@ -141,8 +160,6 @@
     };
     const drawSpeakers = function() {
       const speakersObj = getAttr('speakers');
-      console.log("WHAT")
-      console.log(speakersObj)
       const renderArr = [];
       for (const [speakerIndex, speakerId] of speakersObj.entries()) {
         const speaker = getSpeakerById(speakerId);
@@ -156,18 +173,27 @@
             {
               onClick: function() {
                 speakersObj.splice(speakerIndex, 1);
-                console.log(speakersObj)
                 storeAttr('speakers', speakersObj);
               },
+              className: 'speaker-remove',
             },
-            removeText('Remove this speaker from the session')
+            removeText('Remove the speaker '
+              + speaker.title.rendered
+              + ' from the session')
+        );
+        const flexDiv = el(
+            'div',
+            {
+              className: 'appia-flex',
+            },
+            [speakerName, removeSpeaker]
         );
         const chosenSpeaker = el(
             'div',
             {
               className: 'appia-chosen-speakers',
             },
-            [speakerName, removeSpeaker]
+            flexDiv
         );
         renderArr.push(chosenSpeaker);
       }
@@ -217,7 +243,6 @@
         'Session description:'
     );
     const descWrapped = elWrap('div', {}, [descLabel, desc]);
-    
     // The final element
     return el(
         'div',
@@ -238,4 +263,4 @@
     },
   }; /* End seshArgs */
   registerBlock('appia/sesh-data', seshArgs);
-})(window.wp);
+})(window.wp, window.scriptData);

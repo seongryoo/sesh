@@ -36,17 +36,6 @@ add_action( 'init', 'appia_register_sched_data_block' );
 
 /* Rendering -------------------------------------*/
 
-function appia_get_meta( $id, $meta_name ) {
-  $the_string = get_post_meta( $id, $meta_name, true );
-  $cleaned = utf8_encode( $the_string );
-  $the_object = json_decode( $cleaned, true );
-  $the_data = array();
-  if ( isset( $the_object['data'] ) ) {
-    $the_data = $the_object['data'];
-  }
-  return $the_data;
-}
-
 function appia_get_table_name( $tables, $index ) {
   $name = '';
   if ( count( $tables ) > $index ) {

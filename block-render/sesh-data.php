@@ -40,15 +40,14 @@ function appia_sesh_data_block_render( $attributes ) {
   $id = $post->ID;
 
   $name = get_the_title( $id );
-  $speakers = get_post_meta( $id, 'post_sesh_meta_speakers', true);
-  $desc = get_post_meta( $id, 'post_sesh_meta_desc', true);
-  $link = get_post_meta( $id, 'post_sesh_meta_link', true);
+  $speakers = appia_get_meta( $id, 'post_sesh_meta_speakers' );
+  $desc = get_post_meta( $id, 'post_sesh_meta_desc', true );
+  $link = get_post_meta( $id, 'post_sesh_meta_link', true );
 
   $markup = '';
   $markup .= '<div class="session-post">';
 
   if ( $speakers != '' ) {
-    $speaker_array = explode( "\n", $speakers );
     $markup .= '<div class="speakers-container session-section">';
 
       $markup .= '<div class="session-section-title">';
@@ -56,12 +55,23 @@ function appia_sesh_data_block_render( $attributes ) {
       $markup .= '</div>';
 
       $markup .= '<div class="session-speakers">';
-        foreach( $speaker_array as $speaker_line) {
-          if ( $speaker_line != '' ) {   
-            $markup .= '<div class="session-speaker">';
-              $markup .= $speaker_line;
+        foreach( $speakers as $speaker_id ) {
+          $img = get_post_meta( $speaker_id, 'post_speaker_meta_img_url', true );
+          $name = get_the_title( $speaker_id );
+          $permalink = get_permalink( $speaker_id );
+
+          $markup .= '<a class="session-speaker" href="' . esc_url( $permalink ) . ' "' . 'aria-label="' . $name . ' profile">';
+
+            if ( $img != '' ) {
+              $markup .= '<div class="speaker-img">';
+                $markup .= '<img src="' . esc_url( $img ) . '" alt="' . $name . '">';
+              $markup .= '</div>';
+            }
+            
+            $markup .= '<div class="speaker-name">';
+              $markup .= $name;
             $markup .= '</div>';
-          }
+          $markup .= '</a>';
         }
       $markup .= '</div>';
     $markup .= '</div>';

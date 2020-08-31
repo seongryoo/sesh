@@ -133,7 +133,7 @@
         RichText,
         {
           autocompleters: speakerAutocompleters,
-          placeholder: 'Search for speakers...',
+          placeholder: 'Search for speakers to add...',
           className: 'appia-search-bar',
           onChange: function(value) {
             return;
@@ -196,6 +196,16 @@
             flexDiv
         );
         renderArr.push(chosenSpeaker);
+      }
+      if (speakersObj.length == 0) {
+        const emptyMsg = el(
+            'div',
+            {
+              className: 'appia-chosen-empty',
+            },
+            'No speakers chosen'
+        );
+        renderArr.push(emptyMsg);
       }
       return renderArr;
     };

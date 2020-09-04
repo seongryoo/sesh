@@ -1,3 +1,7 @@
+body.post-type-post_sched .wp-block {
+  max-width: 992px;
+}
+
 .tracks-and-slots {
     width: 100%;
 }

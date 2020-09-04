@@ -248,7 +248,10 @@
   color: crimson;
 }
 
-body.post-type-post_opp .wp-block {
+body.post-type-post_speaker .wp-block {
+  max-width: 992px;
+}
+body.post-type-post_sesh .wp-block {
   max-width: 992px;
 }
 

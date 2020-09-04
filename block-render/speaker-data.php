@@ -58,15 +58,28 @@ function appia_speaker_data_block_render( $attributes ) {
 
   $markup .= '<div class="appia-speaker">';
 
-    $markup .= '<img src="' . $img_url . '" aria-label="' . $name . '" class="appia-speaker-image">';
+    if ( $img_url != '' ) {
+      $markup .= '<img src="' . $img_url . '" aria-label="' . $name . '" class="appia-speaker-image">';
+    }
 
-    $markup .= '<a href="' . esc_url( $link ) . '" aria-label="Open website of ' . $name . '" class="appia-speaker-site">';
-      $markup .= 'Website';
-    $markup .= '</a>';
+    if ( $role != '' ) {
+      $markup .= '<div class="appia-speaker-role>';
+        $markup .= $role;
+      $markup .= '</div>';
+    }
 
-    $markup .= '<div class="appia-speaker-desc">';
-      $markup .= $desc;
-    $markup .= '</div>';
+    if ( $link != '' ) {
+      $markup .= '<a href="' . esc_url( $link ) . '" aria-label="Open website of ' . $name . '" class="appia-speaker-site">';
+        $markup .= 'Website';
+      $markup .= '</a>';
+    }
+
+
+    if ( $desc != '' ) {
+      $markup .= '<div class="appia-speaker-desc">';
+        $markup .= $desc;
+      $markup .= '</div>';
+    }
 
   $markup .= '</div>';
   return $markup;

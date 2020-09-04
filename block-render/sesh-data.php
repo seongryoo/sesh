@@ -57,21 +57,29 @@ function appia_sesh_data_block_render( $attributes ) {
       $markup .= '<div class="session-speakers">';
         foreach( $speakers as $speaker_id ) {
           $img = get_post_meta( $speaker_id, 'post_speaker_meta_img_url', true );
+          $role = get_post_meta( $speaker_id, 'post_speaker_meta_role', true );
           $name = get_the_title( $speaker_id );
           $permalink = get_permalink( $speaker_id );
 
-          $markup .= '<a class="session-speaker" href="' . esc_url( $permalink ) . ' "' . 'aria-label="' . $name . ' profile">';
+          $markup .= '<div class="session-speaker">';
+            $markup .= '<a class="session-speaker-link" href="' . esc_url( $permalink ) . ' "' . 'aria-label="' . $name . ' profile">';
 
-            if ( $img != '' ) {
-              $markup .= '<div class="speaker-img">';
-                $markup .= '<img src="' . esc_url( $img ) . '" alt="' . $name . '">';
+              if ( $img != '' ) {
+                $markup .= '<div class="speaker-img">';
+                  $markup .= '<img src="' . esc_url( $img ) . '" alt="' . $name . '">';
+                $markup .= '</div>';
+              }
+              
+              $markup .= '<div class="speaker-name">';
+                $markup .= $name;
               $markup .= '</div>';
-            }
-            
-            $markup .= '<div class="speaker-name">';
-              $markup .= $name;
+
+            $markup .= '</a>';
+
+            $markup .= '<div class="speaker-role">';
+              $markup .= $role;
             $markup .= '</div>';
-          $markup .= '</a>';
+          $markup .= '</div>'; // .session-speaker
         }
       $markup .= '</div>';
     $markup .= '</div>';

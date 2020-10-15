@@ -1,20 +1,40 @@
 <?php
 
+$script_modules = array(
+  'guten-helpers',
+  'attr-helpers',
+  'ui-wrappers',
+  'fetch-posts',
+  'autocomplete-sessions',
+  'slot-form',
+  'sesh-data',
+  'sched-data',
+  'speaker-data',
+);
+
+// Add type="module" to scripts
+function appia_scripts_to_modules( $tag, $handle, $src ) {
+  global $script_modules;
+  foreach( $script_modules as $module ) {
+    $the_handle = 'appia-' . $module;
+    if ( $the_handle == $handle ) {
+      return '<script type="module" src="' . esc_url( $src ) . '"></script>';
+    }
+  }
+  return $tag;
+}
+add_filter('script_loader_tag', 'appia_scripts_to_modules' , 10, 3);
+
 // Loading appia block assets (js files and administrative css)
 function appia_load_block_assets() {
-  $scripts = array(
-    'drag',
-    'sesh-data',
-    'sched-data',
-    'speaker-data',
-  );
+  global $script_modules;
   $wp_deps = array(
     'wp-blocks',
     'wp-i18n',
     'wp-editor',
     'wp-date',
   );
-  foreach( $scripts as $slug ) {
+  foreach( $script_modules as $slug ) {
     $script_name = 'appia-' . $slug;
     $url = plugin_dir_url( __FILE__ ) . '../editor-assets/js/' . $slug . '.js';
     wp_enqueue_script( $script_name, $url, $wp_deps );

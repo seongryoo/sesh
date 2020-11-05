@@ -44,7 +44,11 @@ const sessionAutocompleters = [
     },
     getOptionLabel: function(session) {
       const id = session.id;
+      console.log(session.title);
       const sessionName = session.title.rendered;
+      const sessionHTML = {
+        __html: sessionName,
+      };
       return el(
           'div',
           {
@@ -56,8 +60,8 @@ const sessionAutocompleters = [
             onDragEnd: function(event) {
               handleDragEnd(event);
             },
-          },
-          sessionName
+            dangerouslySetInnerHTML: sessionHTML,
+          }
       );
     },
     allowContext: function(value) {
@@ -69,14 +73,30 @@ const sessionAutocompleters = [
     },
   },
 ];
-export const sessionAutocomplete = el(
+const searchBar = el(
     RichText,
     {
       autocompleters: sessionAutocompleters,
       placeholder: 'Search for sessions to add...',
+      keepPlaceholderOnFocus: true,
       className: 'appia-search-bar',
       onChange: function(value) {
         return;
       },
     }
+);
+const searchIcon = el(
+    'span',
+    {
+      className: 'appia-search-icon',
+    }
+);
+
+
+export const sessionAutocomplete = el(
+    'div',
+    {
+      className: 'appia-search-sidebar',
+    },
+    [searchBar]
 );

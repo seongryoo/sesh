@@ -1,5 +1,5 @@
 import { storeAttr, getAttr } from './attr-helpers.js';
-import { addText, removeText } from './ui-wrappers.js';
+import { addText, removeText, customTextControl } from './ui-wrappers.js';
 import { el } from './guten-helpers.js';
 
 const { TextControl, Button } = wp.components;
@@ -28,14 +28,14 @@ export const doTracks = function(props, grid) {
     const tracksObj = getAttr(props, 'tracks');
     const renderArr = [];
     for (const [index, track] of tracksObj.entries()) {
-      const trackNameEditable = el(
-          TextControl,
+      const trackNameEditable = customTextControl(
+          'Track Name',
+          'track_name_edit_' + index,
           {
-            'className': 'ungarnished',
             'data-id': index,
             'value': track.name,
-            'label': 'Track Name',
-            'onChange': function(value) {
+            'onChange': function(e) {
+              const value = e.target.value;
               tracksObj[index].name = value;
               storeAttr(props, 'tracks', tracksObj);
             },

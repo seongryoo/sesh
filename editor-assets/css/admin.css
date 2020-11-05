@@ -178,7 +178,7 @@
 }
 
 /* Search bar */
-.appia-search-bar {
+/*.appia-search-bar {
   padding: 0.5em 1em;
   border-radius: 0.25em;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.5);
@@ -196,7 +196,7 @@
   margin-right: 0.5em;
   display: block;
   flex: 0 1 auto;
-}
+}*/
 
 /* Search results */
 .appia-auto-option {

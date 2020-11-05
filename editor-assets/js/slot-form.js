@@ -1,6 +1,6 @@
 import { el } from './guten-helpers.js';
 import { storeAttr, getAttr } from './attr-helpers.js';
-import { addText, removeText } from './ui-wrappers.js';
+import { addText, removeText, customTextControl } from './ui-wrappers.js';
 
 const { TextControl, Button, CheckboxControl } = wp.components;
 const { useState } = wp.element;
@@ -66,15 +66,15 @@ export const doSlots = function(props, grid) {
           },
           addText('Add time slot before session ' + (slotIndex + 1))
       );
-      const slotNameEditable = el(
-          TextControl,
+      const slotNameEditable = customTextControl(
+          'Time Slot Name',
+          'time_slot_name_' + slotIndex,
           {
-            'className': 'ungarnished',
             'data-id': slotIndex,
             'value': slot.name,
-            'label': 'Time Slot Name',
-            'onChange': function(value) {
-              slotsObj[slotIndex].name = value != null ? value : '',
+            'onChange': function(e) {
+              const value = e.target.value;
+              slotsObj[slotIndex].name = value != null ? value : '';
               storeAttr(props, 'slots', slotsObj);
             },
           }
@@ -158,12 +158,17 @@ export const doSlots = function(props, grid) {
               removeText('Remove session from slot')
           );
           const theSession = getSessionById(id);
+          const theTitle = el(
+              'p',
+              {},
+              theSession.title.raw
+          );
           const storedItem = el(
               'div',
               {
                 className: 'stored-session',
               },
-              [theSession.title.raw, removeStoredItemButton]
+              [theTitle, removeStoredItemButton]
           );
           trackStorage.push(storedItem);
         }

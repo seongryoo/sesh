@@ -1,25 +1,25 @@
 import { el } from './guten-helpers.js';
 
+const { Icon } = wp.components;
+
 // Generic add button text
 export const addText = function(msg) {
   return el(
-      'div',
+      Icon,
       {
-        'className': 'button-add-text',
+        'icon': 'plus-alt',
         'aria-label': msg,
-      },
-      ''
+      }
   );
 };
 // Generic delete button text
 export const removeText = function(msg) {
   return el(
-      'div',
+      Icon,
       {
-        'className': 'button-remove-text',
+        'icon': 'trash',
         'aria-label': msg,
-      },
-      ''
+      }
   );
 };
 

@@ -2,6 +2,7 @@ import { el } from './guten-helpers.js';
 
 const { apiFetch } = wp;
 const { RichText } = wp.blockEditor;
+const { Icon } = wp.components;
 
 const handleDragStart = function(event, data) {
   event.stopPropagation();
@@ -79,24 +80,33 @@ const searchBar = el(
       autocompleters: sessionAutocompleters,
       placeholder: 'Search for sessions to add...',
       keepPlaceholderOnFocus: true,
-      className: 'appia-search-bar',
+      className: 'appia-search-input',
       onChange: function(value) {
         return;
       },
     }
 );
 const searchIcon = el(
-    'span',
+    Icon,
     {
       className: 'appia-search-icon',
+      icon: 'search',
     }
 );
 
 
-export const sessionAutocomplete = el(
+const searchBottomBar = el(
     'div',
     {
       className: 'appia-search-sidebar',
     },
-    [searchBar]
+    [searchIcon, searchBar]
+);
+
+export const sessionAutocomplete = el(
+    'div',
+    {
+      className: 'appia-search-bottom',
+    },
+    [searchBottomBar]
 );

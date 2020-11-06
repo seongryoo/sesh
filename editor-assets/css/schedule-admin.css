@@ -1,5 +1,5 @@
 .wp-block {
-  max-width: none;
+  max-width: 1280px;
   margin: 0 32px;
 }
 
@@ -11,24 +11,34 @@
 
 /* Search */
 
-.appia-search-sidebar {
-  border: 1px solid red;
+.appia-search-bottom {
   position: fixed;
-  top: 60px;
+  box-sizing: border-box;
+  bottom: 24px;
   width: 100%;
-  height: 60px;
   left: 0;
+  z-index: 100;
+  padding: 0 28px;
   background: white;
-  z-index: 1;
-}
+  border-top: 1px solid #eaeaea;
 
-.appia-search-bar {
-  margin: 0 32px;
   display: flex;
   flex-direction: column;
+  justify-content: center;
 }
 
-.appia-search-bar::after {
+.appia-search-sidebar {
+  border-radius: 2em;
+  padding: 0.75em;
+  background: #eaeaea;
+  display: flex;
+  align-items: center;
+  margin: 12px auto;
+
+  width: 100%;
+}
+
+.appia-search-input::after {
   content: '';
   width: 0;
   height: 2px;
@@ -39,18 +49,24 @@
 
 }
 
-.appia-search-bar:focus::after {
+.appia-search-input:focus::after {
   width: 100%;
 }
 
-/*.appia-search-icon {
-  content: "\f179";
-  font-family: 'dashicons';
-  margin-right: 0.5em;
+.appia-search-input span {
+  position: absolute;
+}
+
+.appia-search-input {
+  width: 100%;
+}
+
+.appia-search-icon {
   display: block;
   flex: 0 1 auto;
-
-}*/
+  color: gray;
+  margin: 0 8px;
+}
 
 /* Tracks */
 
@@ -77,6 +93,7 @@
 
 .slot {
   display: flex;
+  border-bottom: 1px solid #eaeaea;
 }
 
 .slot-name {

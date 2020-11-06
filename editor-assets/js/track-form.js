@@ -15,13 +15,13 @@ export const doTracks = function(props, grid) {
   if (getAttr(props, 'tracks').length == 0) {
     storeNewTrackData();
   }
-  const trackButtonArgs = {
-    onClick: storeNewTrackData,
-    className: 'button-add',
-  };
   const addTrackButton = el(
       Button,
-      trackButtonArgs,
+      {
+        onClick: function() {
+          storeNewTrackData();
+        },
+      },
       addText('Add schedule track')
   );
   const drawTrack = function() {

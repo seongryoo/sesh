@@ -3,8 +3,6 @@ import { storeAttr, getAttr } from './attr-helpers.js';
 import { addText, removeText, customTextControl } from './ui-wrappers.js';
 
 const { TextControl, Button, CheckboxControl } = wp.components;
-const { useState } = wp.element;
-
 export const doSlots = function(props, grid) {
   const getSessionById = function(id) {
     for (const sesh of props.sessions) {
@@ -36,11 +34,15 @@ export const doSlots = function(props, grid) {
   // Add time slot button
   const addSlotButton = el(
       Button,
-      slotButtonArgs,
+      {
+        onClick: function() {
+          storeNewSlotData();
+        },
+      },
       addText('Add time slot')
   );
   // Display current slots
-  const drawSlots = function(mult) {
+  const drawSlots = function() {
     const slotsObj = getAttr(props, 'slots');
     const renderArr = [];
     for (const [slotIndex, slot] of slotsObj.entries()) {
@@ -52,13 +54,11 @@ export const doSlots = function(props, grid) {
           Button,
           {
             onClick: function() {
-              const slotsObj = getAttr(props, 'slots');
               const blankSlot = {
                 name: '',
               };
               slotsObj.splice(slotIndex, 0, blankSlot);
               storeAttr(props, 'slots', slotsObj);
-              // console.log(grid[slotIndex])
               grid.splice(slotIndex, 0, []);
               storeAttr(props, 'sessions', grid);
             },
@@ -96,24 +96,15 @@ export const doSlots = function(props, grid) {
           },
           removeText('Remove slot')
       );
-      let state;
-      if (slotsObj[slotIndex].shared) {
-        state = true;
-      } else {
-        state = false;
-      }
-      const [isChecked, setChecked] = useState( state );
+      const isChecked = slotsObj[slotIndex].shared;
       const isShared = el(
           CheckboxControl,
           {
             label: 'Trackless/shared slot',
             checked: isChecked,
             onChange: function(stateData) {
-              setChecked(stateData);
-              // console.log(stateData);
               slotsObj[slotIndex].shared = stateData;
               storeAttr(props, 'slots', slotsObj);
-              // console.log(slotsObj)
             },
           }
       );

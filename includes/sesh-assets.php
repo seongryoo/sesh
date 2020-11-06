@@ -54,6 +54,7 @@ function appia_load_block_assets() {
     ) 
   );
 
+  wp_enqueue_style( 'dashicons' );
   $styles = array(
     'admin',
     'schedule-admin',
@@ -63,7 +64,6 @@ function appia_load_block_assets() {
     $url = plugin_dir_url( __FILE__ ) . '../editor-assets/css/' . $slug . '.css';
     wp_enqueue_style( $style_name, $url );
   }
-  wp_enqueue_style( 'dashicons' );
 }
 add_action( 'enqueue_block_editor_assets', 'appia_load_block_assets' );
 

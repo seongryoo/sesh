@@ -18,7 +18,9 @@ $show_in_schedule = array(
 );
 
 // Defines constant which is useful for register_activation hook
-define( 'PLUGIN_FILE_URL', __FILE__ );
+if ( ! defined( 'PLUGIN_FILE_URL' ) ) {
+	define( 'PLUGIN_FILE_URL', __FILE__ );
+}
 
 // Assets file loads in js and css needed to render blocks in WP editor
 include( plugin_dir_path( __FILE__ ) . 'includes/sesh-assets.php');

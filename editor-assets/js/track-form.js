@@ -28,7 +28,7 @@ export const doTracks = function(props, grid) {
     const tracksObj = getAttr(props, 'tracks');
     const renderArr = [];
     for (const [index, track] of tracksObj.entries()) {
-      const trackNameEditable = customTextControl(
+      const trackNameControl = customTextControl(
           'Track Name',
           'track_name_edit_' + index,
           {
@@ -40,6 +40,13 @@ export const doTracks = function(props, grid) {
               storeAttr(props, 'tracks', tracksObj);
             },
           }
+      );
+      const trackNameEditable = el(
+          'div',
+          {
+            className: 'track-name',
+          },
+          trackNameControl
       );
       const removeTrackButton = el(
           Button,

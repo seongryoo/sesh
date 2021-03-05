@@ -17,11 +17,11 @@
   bottom: 24px;
   width: 100%;
   left: 0;
-  z-index: 100;
   padding: 0 28px;
+  z-index: 1;
   background: white;
   border-top: 1px solid #eaeaea;
-
+  box-shadow: 0 -6px 16px 0 rgba(0, 0, 0, 0.25);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -46,7 +46,6 @@
   display: block;
   background: blue;
   transition: width 0.2s;
-
 }
 
 .appia-search-input:focus::after {
@@ -71,7 +70,7 @@
 /* Tracks */
 
 .tracks-and-slots {
-  border: 1px solid green;
+  /*border: 1px solid green;*/
 }
 
 .tracks-container {
@@ -86,6 +85,17 @@
 
 .track {
   flex: 1;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.track .track-name {
+  flex: 1 0 auto;
+}
+
+.track button {
+
 }
 
 
@@ -93,11 +103,21 @@
 
 .slot {
   display: flex;
-  border-bottom: 1px solid #eaeaea;
+  border-top: 2px solid #eaeaea;
+}
+
+.slot-name-delete {
+  display: flex;
 }
 
 .slot-name {
+  margin: 2em 0;
   width: 25%;
+}
+
+.day .slot-name {
+  margin: 2em auto;
+  width: 50%;
 }
 
 .slot-children {
@@ -110,10 +130,15 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
+  padding: 1em;
+  border: 1px solid gray;
 }
 
 .stored-session {
+  padding: 0.5em 1em;
+  margin: 1em;
   border: 1px solid orange;
+  box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 0.25);
   display: flex;
 }
 
@@ -126,9 +151,6 @@
 
 
 /* Add button */
-.tracks-and-slots .button-add {
-  position: absolute;
-}
 
 /* Text input */
 .tracks-and-slots .components-base-control__field {

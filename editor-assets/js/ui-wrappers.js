@@ -2,25 +2,29 @@ import { el } from './guten-helpers.js';
 
 const { Icon } = wp.components;
 
+export const iconText = function(iconName, msg) {
+  const icon = el(
+    Icon,
+    {
+      icon: iconName,
+    }
+  );
+  return el(
+    'div',
+    {},
+    [icon, msg]
+  );
+}
+export const addDay = function(msg) {
+  return iconText('clock', msg);
+};
 // Generic add button text
 export const addText = function(msg) {
-  return el(
-      Icon,
-      {
-        'icon': 'plus-alt',
-        'aria-label': msg,
-      }
-  );
+  return iconText('table-row-before', msg);
 };
 // Generic delete button text
 export const removeText = function(msg) {
-  return el(
-      Icon,
-      {
-        'icon': 'trash',
-        'aria-label': msg,
-      }
-  );
+  return iconText('trash', msg);
 };
 
 export const customTextControl = function(formLabel, formId, args) {

@@ -1,9 +1,9 @@
 import {el} from './guten-helpers.js';
 import {storeAttr, getAttr} from './attr-helpers.js';
 import {addText, removeText,
-  addDay, customTextControl, iconText} from './ui-wrappers.js';
+  customTextControl, iconText, iconNoText} from './ui-wrappers.js';
 
-const {TextControl, Button, CheckboxControl} = wp.components;
+const {Button} = wp.components;
 export const doSlots = function(props, grid) {
   const getSessionById = function(id) {
     for (const sesh of props.sessions) {
@@ -31,19 +31,11 @@ export const doSlots = function(props, grid) {
       name: '',
       shared: false,
     });
-    console.log(grid)
-    console.log(slotsObj)
     storeAttr(props, 'slots', slotsObj);
   };
   if (getAttr(props, 'slots').length == 0) {
     storeNewSlotData();
   }
-  // Args for add time slot button
-  const slotButtonArgs = {
-    onClick: storeNewSlotData,
-    className: 'button-add',
-  };
-
   const addDayButton = el(
       Button,
       {
@@ -103,6 +95,19 @@ export const doSlots = function(props, grid) {
               },
             }
         );
+        const dayDescription = customTextControl(
+            'Day subheader',
+            'day_subheader_' + slotIndex,
+            {
+              'data-id': slotIndex,
+              'value': slot.desc,
+              'onChange': function(e) {
+                const value = e.target.value;
+                slotsObj[slotIndex].desc = value != null ? value : '';
+                storeAttr(props, 'slots', slotsObj);
+              },
+            }
+        );
         const removeDayButton = el(
             Button,
             {
@@ -126,13 +131,12 @@ export const doSlots = function(props, grid) {
         } else {
           options = [addBeforeButton];
         }
-        // Left side of slot flex group
         const displayDayName = el(
             'div',
             {
               className: 'slot-name sched-editable',
             },
-            [dayNameEditable, options]
+            [dayNameEditable, dayDescription, options]
         );
         const element = el(
             'div',
@@ -168,6 +172,7 @@ export const doSlots = function(props, grid) {
                 const blankSlot = {
                   name: '',
                   day: true,
+                  desc: '',
                 };
                 slotsObj.splice(slotIndex, 0, blankSlot);
                 storeAttr(props, 'slots', slotsObj);
@@ -176,7 +181,7 @@ export const doSlots = function(props, grid) {
               },
               className: 'button-add add-before',
             },
-            addDay('Add new day before session ' + (slotIndex + 1))
+            iconText('clock', 'Add new day before session ' + (slotIndex + 1))
         );
         const slotNameEditable = customTextControl(
             'Time Slot Name',
@@ -262,7 +267,7 @@ export const doSlots = function(props, grid) {
                     storeAttr(props, 'sessions', grid);
                   },
                 },
-                removeText('Remove session from slot')
+                iconNoText('trash', 'Remove session from slot')
             );
             const theSession = getSessionById(id);
             const theTitle = el(

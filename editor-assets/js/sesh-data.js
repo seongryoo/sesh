@@ -1,7 +1,7 @@
 import { el, registerBlock } from './guten-helpers.js';
 import { fetchPosts } from './fetch-posts.js';
 import { getAttr, storeAttr } from './attr-helpers.js';
-import { removeText } from './ui-wrappers.js';
+import { removeNoText } from './ui-wrappers.js';
 
 const {apiFetch} = wp;
 const {RichText} = wp.blockEditor;
@@ -130,7 +130,7 @@ const {TextControl, Button} = wp.components;
               },
               className: 'speaker-remove',
             },
-            removeText('Remove the speaker '
+            removeNoText('Remove the speaker '
               + speaker.title.rendered
               + ' from the session')
         );

@@ -11,8 +11,8 @@
 //    link-to-recording
 //    track-number
 $show_in_schedule = array(
-  'speakers'                  => false,
-  'description'               => false,
+  'speakers'                  => true,
+  'description'               => true,
   'link-to-recording'         => true,
   'track-number'              => true,
 );

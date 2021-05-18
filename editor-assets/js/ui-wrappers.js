@@ -2,6 +2,27 @@ import { el } from './guten-helpers.js';
 
 const { Icon } = wp.components;
 
+export const iconNoText = function(iconName, msg) {
+  const label = el(
+      'div',
+      {
+        className: 'visually-hidden',
+      },
+      msg
+  );
+  const icon = el(
+      Icon,
+      {
+        icon: iconName,
+      }
+  );
+  return el(
+      'div',
+      {},
+      [icon, label]
+  );
+}
+
 export const iconText = function(iconName, msg) {
   const icon = el(
     Icon,
@@ -25,6 +46,10 @@ export const addText = function(msg) {
 // Generic delete button text
 export const removeText = function(msg) {
   return iconText('trash', msg);
+};
+
+export const removeNoText = function(msg) {
+  return iconNoText('trash', msg);
 };
 
 export const customTextControl = function(formLabel, formId, args) {

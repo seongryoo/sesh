@@ -60,7 +60,7 @@ function appia_speaker_data_block_render( $attributes ) {
 
     $markup .= '<h2 class="appia-speaker-name">' . $name . '</h2>';
     if ( $role != '' ) {
-      $markup .= '<div class="appia-speaker-role>';
+      $markup .= '<div class="appia-speaker-role">';
         $markup .= $role;
       $markup .= '</div>';
     }

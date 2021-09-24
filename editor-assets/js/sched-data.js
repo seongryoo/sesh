@@ -7,12 +7,15 @@ import { doTracks } from './track-form.js';
 import { addText, removeText } from './ui-wrappers.js';
 
 const schedEdit = fetchPosts('post_sesh', 'sessions')(function(props) {
+  const loadingSessions = 'Fetching session posts...';
+  const noSessions = 'Could not find any sessions to work with. Make some session posts to add them to the schedule!';
+  let autocomplete;
   if (!props.sessions) {
-    return 'Fetching sessions...';
-  }
-  if (props.sessions.length == 0) {
-    return 'Could not find any sessions to work with.'
-      + ' Make some session posts to get started!';
+    autocomplete = loadingSessions;
+  } else if (props.sessions && props.sessions.length == 0) {
+    autocomplete = noSessions;
+  } else {
+    autocomplete = sessionAutocomplete;
   }
   // Get sessions grid
   const grid = getAttr(props, 'sessions');
@@ -30,7 +33,7 @@ const schedEdit = fetchPosts('post_sesh', 'sessions')(function(props) {
       {
         className: 'appia-blocks schedule',
       },
-      [sessionAutocomplete, tracksAndSlots]
+      [autocomplete, tracksAndSlots]
   );
 });
 const schedArgs = {

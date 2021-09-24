@@ -9,13 +9,9 @@ const {TextControl, Button} = wp.components;
 
 (function(scriptData) {
   const seshEdit = fetchPosts('post_speaker', 'speakers')(function(props) {
-    if (!props.speakers) {
-      return 'Fetching speakers...';
-    }
-    if (props.speakers.length == 0) {
-      return 'Could not find any speakers to work with.'
-        + ' Make some speaker posts to get started!';
-    }
+    let speakers;
+    const loadingSpeakers = 'Fetching speakers...';
+    const noSpeakers = 'Could not find any Speaker posts. Make some Speaker posts to add to this session!';
     // Helper method that generates appia field wrapper
     const elWrap = function(element, args, value) {
       let generatedElement;
@@ -111,10 +107,15 @@ const {TextControl, Button} = wp.components;
     const drawSpeakers = function() {
       const speakersObj = getAttr(props, 'speakers');
       const renderArr = [];
+      if (!props.speakers || props.speakers && props.speakers.length == 0) {
+        return null;
+      }
       for (const [speakerIndex, speakerId] of speakersObj.entries()) {
         const speaker = getSpeakerById(speakerId);
         if (speaker == undefined) {
-          return;
+          speakersObj.splice(speakerIndex, 1);
+          storeAttr(props, 'speakers', speakersObj);
+          continue;
         }
         const speakerName = el(
             'p',
@@ -167,11 +168,18 @@ const {TextControl, Button} = wp.components;
         {},
         drawSpeakers()
     );
-    const speakers = elWrap(
+    const speakerSearch = elWrap(
         'div',
         {},
         [speakerAutocomplete, chosenSpeakers]
     );
+    if (!props.speakers) {
+      speakers = loadingSpeakers;
+    } else if (props.speakers.length == 0) {
+      speakers = noSpeakers;
+    } else {
+      speakers = speakerSearch;
+    }
     // Session link
     const linkArgs = {
       onChange: function(value) {

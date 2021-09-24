@@ -6,6 +6,9 @@ import {addText, removeText,
 const {Button} = wp.components;
 export const doSlots = function(props, grid) {
   const getSessionById = function(id) {
+    if (!props.sessions) {
+      return;
+    }
     for (const sesh of props.sessions) {
       if (sesh.id == id) {
         return sesh;
@@ -258,32 +261,40 @@ export const doSlots = function(props, grid) {
             grid[slotIndex].push([]);
           }
           const trackStorage = [];
-          for (const [itemIndex, id] of grid[slotIndex][trackIndex].entries()) {
-            const removeStoredItemButton = el(
-                Button,
-                {
-                  onClick: function() {
-                    grid[slotIndex][trackIndex].splice(itemIndex, 1);
-                    storeAttr(props, 'sessions', grid);
+          if (props.sessions) {
+            for (const [itemIndex, id] of grid[slotIndex][trackIndex].entries()) {
+              const theSession = getSessionById(id);
+              if (theSession === undefined) {
+                grid[slotIndex][trackIndex].splice(itemIndex, 1);
+                storeAttr(props, 'sessions', grid);
+                continue;
+              }
+              const removeStoredItemButton = el(
+                  Button,
+                  {
+                    onClick: function() {
+                      grid[slotIndex][trackIndex].splice(itemIndex, 1);
+                      storeAttr(props, 'sessions', grid);
+                    },
                   },
-                },
-                iconNoText('trash', 'Remove session from slot')
-            );
-            const theSession = getSessionById(id);
-            const theTitle = el(
-                'p',
-                {},
-                theSession.title.raw
-            );
-            const storedItem = el(
-                'div',
-                {
-                  className: 'stored-session',
-                },
-                [theTitle, removeStoredItemButton]
-            );
-            trackStorage.push(storedItem);
+                  iconNoText('trash', 'Remove session from slot')
+              );
+              const theTitle = el(
+                  'p',
+                  {},
+                  theSession.title.raw
+              );
+              const storedItem = el(
+                  'div',
+                  {
+                    className: 'stored-session',
+                  },
+                  [theTitle, removeStoredItemButton]
+              );
+              trackStorage.push(storedItem);
+            }
           }
+          
           const trackElement = el(
               'div',
               {

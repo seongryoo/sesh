@@ -10,6 +10,7 @@ $script_modules = array(
   'sesh-data',
   'sched-data',
   'speaker-data',
+  'schedule-display',
 );
 
 // Add type="module" to scripts

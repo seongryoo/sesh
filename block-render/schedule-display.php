@@ -35,12 +35,13 @@ function slots_to_days( $slots ) {
     $new_day = array(
       'day_info' => array(),
       'slots' => array(),
+      'offset' => 0,
     );
     $slots_by_day = array(
       $new_day,
     );
     $current_day_num = 0;
-    foreach ( $slots as $slot ) {
+    foreach ( $slots as $offset=>$slot ) {
       // "Days" of a conference are represented as slots with 
       // a day attribute set to true.
       if ( isset( $slot[ 'day' ] ) && $slot[ 'day' ] ) {
@@ -51,6 +52,7 @@ function slots_to_days( $slots ) {
           // Store information about day (title, caption, etc.)
           'day_info' => $slot,
           'slots' => array(),
+          'offset' => $offset + 1,
         );
         // Append to array of days
         $slots_by_day[] = $new_day;
@@ -67,6 +69,7 @@ function slots_to_days( $slots ) {
       'day_info' => array(),
       // Lump all the slots into a single day
       'slots' => $slots,
+      'offset' => 0,
     );
     $slots_by_day = array(
       $new_day,
@@ -102,7 +105,7 @@ function render_session( $id, $options ) {
   $cta = get_post_meta( $id, 'post_sesh_meta_link', true );
 
   $markup = '';
-  $markup .= '<div>';
+  $markup .= '<div class="session">';
 
   if ( $options['clickable_events'] ) {
     $markup .= '<a href="' . esc_url( $url ) . '">';
@@ -111,6 +114,9 @@ function render_session( $id, $options ) {
   } else {
     $markup .= esc_html( $title );
   }
+
+
+  $markup .= '</div>';
 
   return $markup;
 }
@@ -128,15 +134,15 @@ function render_day( $day_num, $day, $tracks, $sessions, $options ) {
     $markup .= '<p>' . esc_html( $day_desc ) . '</p>';
   }
 
-  $markup .= '<table>';
+  $markup .= '<table class="day-schedule">';
   $markup .= '<caption>Events on ' . esc_html( $day_name ) . '</caption>';
 
-  $markup .= '<thead>';
+  $markup .= '<thead class="tracks">';
     $markup .= '<tr>';
       // spacer
       $markup .= '<td></td>';
       foreach ( $tracks as $track ) {
-        $markup .= '<th scope="col">' . appia_get_name( $track ) . '</th>';
+        $markup .= '<th scope="col" class="track-name">' . appia_get_name( $track ) . '</th>';
       }
     $markup .= '</tr>';
   $markup .= '</thead>';
@@ -149,14 +155,15 @@ function render_day( $day_num, $day, $tracks, $sessions, $options ) {
       } else {
         $is_shared = false;
       }
-      $markup .= '<tr>';
+      $markup .= '<tr class="slot">';
         $markup .= '<th scope="row">';
           $markup .= appia_get_name( $slot );
         $markup .= '</th>';
         if ( $is_shared ) {
           $markup .= '<td colspan="' . $num_tracks . '">';
           // Only grab the sessions in the "first track"
-          $slot_items = appia_sessions( $sessions, $slot_index, 0);
+          $slot_items = appia_sessions( $sessions, $day['offset'] + $slot_index, 0);
+          $markup .= json_encode( $slot_items );
           foreach ( $slot_items as $sesh_id ) {
             $session = render_session( $sesh_id, $options );
             $markup .= $session;
@@ -165,7 +172,8 @@ function render_day( $day_num, $day, $tracks, $sessions, $options ) {
         } else {
           foreach ( $tracks as $track_num => $track ) {
             $markup .= '<td>';
-            $slot_items = appia_sessions( $sessions, $slot_index, $track_num );
+            $slot_items = appia_sessions( $sessions, $day['offset'] + $slot_index, $track_num );
+            $markup .= json_encode( $slot_items );
             foreach ( $slot_items as $sesh_id ) {
               $session = render_session( $sesh_id, $options );
               $markup .= $session;
@@ -177,6 +185,7 @@ function render_day( $day_num, $day, $tracks, $sessions, $options ) {
     }
   $markup .= '</tbody>';
   $markup .= '</table>';
+  $markup .= '</div>';
   return $markup;
 }
 

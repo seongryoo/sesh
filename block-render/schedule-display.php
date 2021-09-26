@@ -10,6 +10,31 @@ function appia_register_display_block() {
     'attributes' => array(
       'schedule' => array(
         'type' => 'string',
+        'default' => '-1',
+      ),
+      'clickable_events' => array(
+        'type' => 'boolean',
+        'default' => true,
+      ),
+      'show_speakers' => array(
+        'type' => 'boolean',
+        'default' => false,
+      ),
+      'clickable_speakers' => array(
+        'type' => 'boolean',
+        'default' => false,
+      ),
+      'show_desc' => array(
+        'type' => 'boolean',
+        'default' => false,
+      ),
+      'show_cta' => array(
+        'type' => 'boolean',
+        'default' => false,
+      ),
+      'cta_text' => array(
+        'type' => 'string',
+        'default' => 'View session',
       ),
     ),
     'render_callback' => 'appia_display_block_render',
@@ -189,15 +214,15 @@ function render_day( $day_num, $day, $tracks, $sessions, $options ) {
 
 /* Rendering -------------------------------------*/
 function appia_display_block_render( $attributes ) {
-  $json = $attributes['schedule'];
-  $id = appia_parse( $json );
+  $id = $attributes['schedule'];
 
   $options = array(
-    'clickable_events' => true,
-    'show_speakers' => true,
-    'show_desc' => true,
-    'show_cta' => true,
-    'cta_verb' => 'View',
+    'clickable_events' => $attributes['clickable_events'],
+    'clickable_speakers' => $attributes['clickable_speakers'],
+    'show_speakers' => $attributes['show_speakers'],
+    'show_desc' => $attributes['show_desc'],
+    'show_cta' => $attributes['show_cta'],
+    'cta_text' => $attributes['cta_text'],
   );
 
   $schedule_obj = get_post( $id );

@@ -1,3 +1,7 @@
+.components-base-control__help {
+  white-space: pre-wrap;
+}
+
 /* Styling for text input blocks */
 .appia-field-block .components-base-control__help {
   margin: 0;
@@ -25,14 +29,33 @@
   box-shadow: 0 10px 25px 2px rgba(0, 0, 0, 0.1);
 }
 
-.appia-blocks .appia-field-block label:nth-child(1) {
+.appia-blocks label:nth-child(1) {
   font-size: 1.5rem;
   margin-bottom: 1.5rem;
   display: block;
 }
 .appia-blocks .appia-field-block p,
-.appia-blocks .appia-field-block input {
+.appia-blocks .appia-field-block input,
+.appia-blocks .appia-field-block label,
+.appia-blocks .appia-field-block select {
   font-size: 1rem;
+}
+
+.appia-blocks.formblock label:nth-child(1) {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+.appia-blocks.formblock select {
+  font-size: 1rem !important;
+}
+.appia-blocks.formblock .components-base-control {
+  margin: 1.25rem 0;
+}
+.appia-blocks.formblock fieldset {
+  margin: 2rem 0;
+  padding: 1rem 0;
+  border: 1px solid #eaeaea;
 }
 
 .appia-input__rich-text {

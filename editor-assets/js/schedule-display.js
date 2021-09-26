@@ -4,15 +4,49 @@ import { getAttr, storeAttr } from './attr-helpers.js';
 
 const {apiFetch} = wp;
 const {RichText} = wp.blockEditor;
-const {TextControl, Button} = wp.components;
+const {TextControl, Button, SelectControl, CheckboxControl} = wp.components;
+const {useState} = wp.element;
 
 const displayEdit = fetchPosts('post_sched', 'schedules')((props) => {
+  let chooseSchedule;
+  const loadingSchedules = 'Fetching Schedules...';
+  const noSchedules = 'Could not find any Schedules. Make a Schedule post to get started.';
+
   if (!props.schedules) {
-    return 'Fetching schedules...';
+    chooseSchedule = loadingSchedules;
+  } else if (props.schedules.length == 0) {
+    chooseSchedule =  noSchedules;
+  } else {
+    const optionList = props.schedules.map((schedule) => {
+      return {
+        label: schedule.title.rendered,
+        value: schedule.id,
+      };
+    });
+    optionList.unshift({
+      label: '(None)',
+      value: -1,
+    });
+    const dropdown = el(
+        SelectControl,
+        {
+          label: 'Select the Schedule to display on this page',
+          value: props.attributes.schedule,
+          options: optionList,
+          onChange: (value) => {
+            props.setAttributes({
+              schedule: value,
+            });
+          },
+        }
+    );
+    chooseSchedule = dropdown;
   }
-  if (props.schedules.length == 0) {
-    return 'Could not find any schedules to work with.'
-      + ' Make a Schedule to get started!';
+  let displayOptions;
+  if (props.attributes.schedule && props.attributes.schedule != -1) {
+    displayOptions = 'Display options';
+  } else {
+    displayOptions = null;
   }
   // Helper method that generates appia field wrapper
   const elWrap = function(element, args, value) {
@@ -32,71 +66,16 @@ const displayEdit = fetchPosts('post_sched', 'schedules')((props) => {
         generatedElement
     );
   };
-  const scheduleAutocompleters = [
-    {
-      name: 'schedules',
-      className: 'editor-autocompleters__schedule',
-      triggerPrefix: '',
-      options: function(search) {
-        let payload = '';
-        if (search) {
-          payload = '?search=' + encodeURIComponent(search);
-        }
-        return apiFetch(
-            {
-              path: '/wp/v2/post_sched' + payload,
-            }  
-        );
-      },
-      getOptionKeywords: function(schedule) {
-        return [schedule.title.rendered];
-      },
-      getOptionLabel: function(schedule) {
-        const name = el(
-            'p',
-            {},
-            schedule.title.rendered
-        );
-        return el(
-            'div',
-            {
-              className: 'schedule-option appia-auto-option',
-            },
-            name
-        );
-      },
-      allowContext: function(value) {
-        return value != '';
-      },
-      getOptionCompletion: function(schedule) {
-        storeAttr(props, 'schedule', schedule.id);
-        return '';
-      },
-    },
-  ];
-  const scheduleAutocomplete = el(
-      RichText,
-      {
-        autocompleters: scheduleAutocompleters,
-        placeholder: 'Search for a schedule to display',
-        className: 'appia-search-bar',
-        onChange: function(value) {
-          return;
-        },
-      }
+  
+  const selectedSchedule = el(
+      'p',
+      {},
+      props.attributes.schedule
   );
-  const renderSelected = () => {
-    const selected = getAttr(props, 'schedule');
-    return el(
-        'p',
-        {},
-        selected
-    );
-  };
   const sched = elWrap(
       'div',
       {},
-      [scheduleAutocomplete, renderSelected()]
+      [chooseSchedule, selectedSchedule, displayOptions]
   );
   return el(
       'div',

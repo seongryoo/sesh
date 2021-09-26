@@ -163,7 +163,6 @@ function render_day( $day_num, $day, $tracks, $sessions, $options ) {
           $markup .= '<td colspan="' . $num_tracks . '">';
           // Only grab the sessions in the "first track"
           $slot_items = appia_sessions( $sessions, $day['offset'] + $slot_index, 0);
-          $markup .= json_encode( $slot_items );
           foreach ( $slot_items as $sesh_id ) {
             $session = render_session( $sesh_id, $options );
             $markup .= $session;
@@ -173,7 +172,6 @@ function render_day( $day_num, $day, $tracks, $sessions, $options ) {
           foreach ( $tracks as $track_num => $track ) {
             $markup .= '<td>';
             $slot_items = appia_sessions( $sessions, $day['offset'] + $slot_index, $track_num );
-            $markup .= json_encode( $slot_items );
             foreach ( $slot_items as $sesh_id ) {
               $session = render_session( $sesh_id, $options );
               $markup .= $session;
@@ -216,7 +214,6 @@ function appia_display_block_render( $attributes ) {
 
   $markup = '';
   $markup .= '<h2>Schedule</h2>';
-  $markup .= json_encode( $slots_by_day );
 
   foreach ( $slots_by_day as $day_num => $day ) {
     $markup .= render_day( $day_num, $day, $tracks, $sessions, $options );

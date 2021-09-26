@@ -17,4 +17,4 @@ function appia_block_categories( $categories, $post ) {
   );
 }
 
-add_filter( 'block_categories', 'appia_block_categories', 10, 2 );
+add_filter( 'block_categories_all', 'appia_block_categories', 10, 2 );

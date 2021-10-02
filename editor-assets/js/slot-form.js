@@ -2,9 +2,12 @@ import {el} from './guten-helpers.js';
 import {storeAttr, getAttr} from './attr-helpers.js';
 import {addText, removeText,
   customTextControl, iconText, iconNoText} from './ui-wrappers.js';
+import { PopupSearch } from './popup-search.js';
 
-const {Button} = wp.components;
+const {Button, Popover} = wp.components;
+const {useState} = wp.element;
 export const doSlots = function(props, grid) {
+  const [popoverElement, setPopoverElement] = useState(null);
   const getSessionById = function(id) {
     if (!props.sessions) {
       return;
@@ -166,7 +169,7 @@ export const doSlots = function(props, grid) {
               },
               className: 'button-add add-before',
             },
-            addText('Add time slot before session ' + (slotIndex + 1))
+            addText('Add time slot before slot ' + (slotIndex + 1))
         );
         const addDayBeforeButton = el(
             Button,
@@ -184,7 +187,7 @@ export const doSlots = function(props, grid) {
               },
               className: 'button-add add-before',
             },
-            iconText('clock', 'Add new day before session ' + (slotIndex + 1))
+            iconText('clock', 'Add new day before slot ' + (slotIndex + 1))
         );
         const slotNameEditable = customTextControl(
             'Time Slot Name',
@@ -219,9 +222,9 @@ export const doSlots = function(props, grid) {
         const isChecked = slotsObj[slotIndex].shared;
         let makeShared;
         if (!isChecked) {
-          makeShared = iconText('calendar', 'Make into a shared session');
+          makeShared = iconText('calendar', 'Make into a shared slot');
         } else {
-          makeShared = iconText('calendar-alt', 'Undo shared session');
+          makeShared = iconText('calendar-alt', 'Undo shared slot');
         }
         const isShared = el(
             Button,
@@ -264,6 +267,7 @@ export const doSlots = function(props, grid) {
           if (props.sessions) {
             for (const [itemIndex, id] of grid[slotIndex][trackIndex].entries()) {
               const theSession = getSessionById(id);
+              // Pruning nonexistent session ids
               if (theSession === undefined) {
                 grid[slotIndex][trackIndex].splice(itemIndex, 1);
                 storeAttr(props, 'sessions', grid);
@@ -277,7 +281,7 @@ export const doSlots = function(props, grid) {
                       storeAttr(props, 'sessions', grid);
                     },
                   },
-                  iconNoText('trash', 'Remove session from slot')
+                  iconNoText('trash', 'Remove session "' + theSession.title.raw + '" from slot')
               );
               const theTitle = el(
                   'p',
@@ -294,6 +298,46 @@ export const doSlots = function(props, grid) {
               trackStorage.push(storedItem);
             }
           }
+
+
+          const popButton = () => {
+            const [isPopoverOpen, setPopoverOpen] = useState(false);
+            const id = "" + trackIndex + slotIndex;
+            const addSession = (session) => {
+              // console.log(session);
+              grid[slotIndex][trackIndex].push(session.id);
+              storeAttr(props, 'sessions', grid);
+            };
+
+            const popover = PopupSearch({
+              sessions: props.sessions != null ? [...props.sessions] : [],
+              setPopoverOpen, 
+              setPopoverElement,
+              addSession,
+            });
+            const openPopover = el(
+                Button,
+                {
+                  onClick: () => {
+                    if (isPopoverOpen) {
+                      setPopoverOpen(false);
+                    } else {
+                      setPopoverElement(id);
+                      setPopoverOpen(true);
+                    }
+                  },
+                  className: 'components-button block-editor-button-block-appender',
+                },
+                iconNoText('plus-alt2', 'Add session')
+            );
+            return el(
+                'div',
+                {},
+                [openPopover, isPopoverOpen && popoverElement == id ? popover : null]
+            );
+          };
+
+
           
           const trackElement = el(
               'div',
@@ -324,7 +368,7 @@ export const doSlots = function(props, grid) {
                   storeAttr(props, 'sessions', grid);
                 },
               },
-              trackStorage
+              [trackStorage, popButton()]
           );
           childrenArr.push(trackElement);
         }

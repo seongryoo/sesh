@@ -33,7 +33,7 @@ const schedEdit = fetchPosts('post_sesh', 'sessions')(function(props) {
       {
         className: 'appia-blocks schedule',
       },
-      [autocomplete, tracksAndSlots]
+      [tracksAndSlots]
   );
 });
 const schedArgs = {

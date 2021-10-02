@@ -149,41 +149,16 @@ const displayEdit = fetchPosts('post_sched', 'schedules')((props) => {
   } else {
     displayOptions = null;
   }
-  // Helper method that generates appia field wrapper
-  const elWrap = function(element, args, value) {
-    let generatedElement;
-    if (arguments.length == 3) {
-      generatedElement = el(element, args, value);
-    } else if (arguments.length == 2) {
-      generatedElement = el(element, args);
-    } else if (arguments.length == 1) {
-      generatedElement = el(element);
-    }
-    return el(
-        'div',
-        {
-          className: 'appia-field-block',
-        },
-        generatedElement
-    );
-  }; // End elWrap()
   
   const selectedSchedule = el(
       'p',
       {},
       props.attributes.schedule
   );
-  const finalForm = elWrap(
+  return el(
       'div',
       {},
       [chooseSchedule, displayOptions]
-  );
-  return el(
-      'div',
-      {
-        className: '',
-      },
-      finalForm
   );
 });
 const displayArgs = {

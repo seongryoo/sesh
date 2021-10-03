@@ -148,7 +148,7 @@ const displayEdit = fetchPosts('post_sched', 'schedules')((props) => {
     );
   } else {
     displayOptions = null;
-  }
+  };
   
   const selectedSchedule = el(
       'p',

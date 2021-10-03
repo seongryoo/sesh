@@ -7,7 +7,20 @@ import { PopupSearch } from './popup-search.js';
 const {Button, Popover} = wp.components;
 const {useState} = wp.element;
 export const doSlots = function(props, grid) {
+  const [isPopoverOpen, setPopoverOpen] = useState(true);
   const [popoverElement, setPopoverElement] = useState(null);
+  const [popSlotIndex, setPopSlotIndex] = useState();
+  const [popTrackIndex, setPopTrackIndex] = useState();
+  const addSession = (session) => {
+    grid[popSlotIndex][popTrackIndex].push(session.id);
+    storeAttr(props, 'sessions', grid);
+  };
+  const popover = PopupSearch({
+    sessions: props.sessions != null ? [...props.sessions] : [],
+    setPopoverOpen, 
+    setPopoverElement,
+    addSession,
+  });
   const getSessionById = function(id) {
     if (!props.sessions) {
       return;
@@ -301,20 +314,9 @@ export const doSlots = function(props, grid) {
 
 
           const popButton = () => {
-            const [isPopoverOpen, setPopoverOpen] = useState(false);
+            // const [isPopoverOpen, setPopoverOpen] = useState(false);
             const id = "" + trackIndex + slotIndex;
-            const addSession = (session) => {
-              // console.log(session);
-              grid[slotIndex][trackIndex].push(session.id);
-              storeAttr(props, 'sessions', grid);
-            };
 
-            const popover = PopupSearch({
-              sessions: props.sessions != null ? [...props.sessions] : [],
-              setPopoverOpen, 
-              setPopoverElement,
-              addSession,
-            });
             const openPopover = el(
                 Button,
                 {
@@ -324,6 +326,8 @@ export const doSlots = function(props, grid) {
                     } else {
                       setPopoverElement(id);
                       setPopoverOpen(true);
+                      setPopSlotIndex(slotIndex);
+                      setPopTrackIndex(trackIndex);
                     }
                   },
                   className: 'components-button block-editor-button-block-appender',

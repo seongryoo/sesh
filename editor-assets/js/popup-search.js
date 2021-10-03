@@ -1,6 +1,6 @@
 import {el, p} from './guten-helpers.js';
 
-const {SearchControl, Popover, Card, CardBody, CardHeader, TextControl} = wp.components;
+const {Popover, Card, CardBody, CardHeader, TextControl} = wp.components;
 const {useState} = wp.element;
 export const PopupSearch = ({
   sessions,
@@ -9,7 +9,6 @@ export const PopupSearch = ({
   addSession,
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchResults, setSearchResults] = useState(sessions);
 
   const closeSelf = () => {
     setPopoverOpen(false);

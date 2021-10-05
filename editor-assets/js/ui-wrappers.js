@@ -45,11 +45,11 @@ export const addText = function(msg) {
 };
 // Generic delete button text
 export const removeText = function(msg) {
-  return iconText('trash', msg);
+  return iconText('no-alt', msg);
 };
 
 export const removeNoText = function(msg) {
-  return iconNoText('trash', msg);
+  return iconNoText('no-alt', msg);
 };
 
 export const customTextControl = function(formLabel, formId, args) {

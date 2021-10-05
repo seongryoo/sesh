@@ -9,93 +9,25 @@
   font-size: 16px;
 }
 
-/* Search */
-
-.appia-search-bottom {
-  position: fixed;
-  box-sizing: border-box;
-  bottom: 24px;
-  width: 100%;
-  left: 0;
-  padding: 0 28px;
-  z-index: 10;
-  background: white;
-  border-top: 1px solid #eaeaea;
-  box-shadow: 0 -6px 16px 0 rgba(0, 0, 0, 0.25);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.appia-search-sidebar {
-  border-radius: 2em;
-  padding: 0.75em;
-  background: #eaeaea;
-  display: flex;
-  align-items: center;
-  margin: 12px auto;
-
-  width: 100%;
-}
-
-.appia-search-input::after {
-  content: '';
-  width: 0;
-  height: 2px;
-  margin: 0 auto;
+.appia-blocks label:nth-child(1) {
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
   display: block;
-  background: blue;
-  transition: width 0.2s;
 }
-
-.appia-search-input:focus::after {
-  width: 100%;
+.appia-blocks .sched-text-input {
+  margin-bottom: 0.25rem;
 }
-
-.appia-search-input span {
-  position: absolute;
-}
-
-.appia-search-input {
-  width: 100%;
-}
-
-.appia-search-icon {
-  display: block;
-  flex: 0 1 auto;
-  color: gray;
-  margin: 0 8px;
-}
-
 /* Tracks */
-
-.tracks-and-slots {
-  /*border: 1px solid green;*/
-}
 
 .tracks-container {
   display: flex;
   width: 100%;
 }
 
-.tracks-container:nth-child(1):before {
-  width: 25%;
-  content: '';
-}
-
 .track {
+  padding: 1rem;
   flex: 1;
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-}
-
-.track .track-name {
-  flex: 1 0 auto;
-}
-
-.track button {
-
+  border-left: 1px solid rgba(60, 67, 74, 0.2);
 }
 
 
@@ -103,7 +35,7 @@
 
 .slot {
   display: flex;
-  border-top: 2px solid #eaeaea;
+  border-top: 1px solid rgba(60, 67, 74, 0.6);
 }
 
 .slot-name-delete {
@@ -111,8 +43,13 @@
 }
 
 .slot-name {
-  margin: 2em 0;
+  margin: 0 0 2rem 0;
   width: 25%;
+  padding: 1rem;
+}
+
+button .dashicon {
+  margin-right: 0.5rem;
 }
 
 .day .slot-name {
@@ -131,15 +68,24 @@
   display: flex;
   flex-direction: column;
   padding: 1em;
-  border: 1px solid gray;
+  border-left: 1px solid rgba(60, 67, 74, 0.25);
 }
 
 .stored-session {
-  padding: 0.5em 1em;
-  margin: 1em;
-  border: 1px solid orange;
-  box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 0.25);
+  padding: 0.5rem 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
   display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 1rem;
+}
+
+.stored-session button {
+  margin-right: -12px;
+}
+
+.stored-session button .dashicon {
+  margin-right: 0;
 }
 
 .slot .stored-session > p {

@@ -24,9 +24,29 @@ export const doTracks = function(props, grid) {
       },
       addText('Add schedule track')
   );
+  const addTrack = el(
+      'div',
+      {
+        style: {
+          display: 'flex',
+          justifyContent: 'flex-end',
+        },
+      },
+      addTrackButton
+  );
   const drawTrack = function() {
     const tracksObj = getAttr(props, 'tracks');
     const renderArr = [];
+    renderArr.push(el(
+      'div',
+      {
+        style: {
+          width: '25%',
+          height: 'auto',
+          flex: '0 0 auto',
+        },
+      }
+    ));
     for (const [index, track] of tracksObj.entries()) {
       const trackNameControl = customTextControl(
           'Track Name',
@@ -97,6 +117,6 @@ export const doTracks = function(props, grid) {
       {
         className: 'sched-tracks sched',
       },
-      [displayTracks, addTrackButton]
+      [displayTracks, addTrack]
   );
 };

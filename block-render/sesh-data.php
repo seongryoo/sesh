@@ -47,8 +47,6 @@ function appia_sesh_data_block_render( $attributes ) {
   $markup = '';
   $markup .= '<div class="session-post">';
 
-  $markup .= '<h1>' . $name . '</h1>';
-
   if ( count( $speakers ) != 0 ) {
     $markup .= '<div class="speakers-container session-section">';
 

@@ -8,7 +8,7 @@ import { PopupSearch } from './popup-search.js';
 
 const { Button, Popover } = wp.components;
 const { useState } = wp.element;
-export const doSlots = function (props, grid) {
+export const doSlots = function (props, grid, updateSessions) {
   const [isPopoverOpen, setPopoverOpen] = useState(true);
   const [popoverElement, setPopoverElement] = useState(null);
   const [popSlotIndex, setPopSlotIndex] = useState();
@@ -22,6 +22,7 @@ export const doSlots = function (props, grid) {
     setPopoverOpen,
     setPopoverElement,
     addSession,
+    updateSessions,
   });
   const getSessionById = function (id) {
     if (!props.sessions) {

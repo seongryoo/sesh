@@ -1,7 +1,10 @@
 import {el, p} from './guten-helpers.js';
+import { iconText } from './ui-wrappers.js';
 
-const {Popover, Card, CardBody, CardHeader, TextControl} = wp.components;
-const {useState} = wp.element;
+const {Popover, Card, CardBody, CardHeader, TextControl, Button} = wp.components;
+const {useState, useEffect} = wp.element;
+
+
 export const PopupSearch = ({
   sessions,
   setPopoverOpen, 
@@ -9,7 +12,13 @@ export const PopupSearch = ({
   addSession,
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
-
+  const [inject, setInject] = useState();
+  useEffect(() => {
+    if (scriptData) {
+      setInject(scriptData);
+      console.log(scriptData);
+    }
+  }, [scriptData]);
   const closeSelf = () => {
     setPopoverOpen(false);
     setPopoverElement(null);
@@ -27,7 +36,6 @@ export const PopupSearch = ({
         id: 'insert-session-search',
         onChange: (value) => {
           setSearchTerm(value);
-          console.log(sessions);
         },
         value: searchTerm,
       }
@@ -58,8 +66,45 @@ export const PopupSearch = ({
   });
   let results = resultSessions;
   if (resultSessions.length == 0) {
-    results = 'No sessions found.';
+    results = ['No sessions found.'];
   }
+  
+  let createNew = null;
+  if (inject && searchTerm != '') {
+    createNew = el(
+        Button,
+        {
+          onClick: (w) => {
+            const e = w.nativeEvent;
+            e.preventDefault();
+            const postData = {
+              title: searchTerm,
+              status: "publish",
+            };
+            const createPost = new XMLHttpRequest();
+            createPost.open("POST", inject.siteUrl + '/wp-json/wp/v2/post_sesh');
+            createPost.setRequestHeader('X-WP-Nonce', inject.nonce);
+            createPost.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+            createPost.send(JSON.stringify(postData));
+            createPost.onreadystatechange = () => {
+              if (createPost.readyState == 4) {
+                if (createPost.status == 201) {
+                  closeSelf();
+                  const res = JSON.parse(createPost.response);
+                  const newId = res.id;
+                  console.log(res, newId);
+                } else {
+                  alert('Error when trying to create a Session.');
+                }
+              }
+            };
+          },
+        },
+        iconText('edit', 'Create new Session titled "' + searchTerm + '"')
+    );
+  }
+
+  results.push(createNew);
 
   const cardBody = el(
       CardBody,

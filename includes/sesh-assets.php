@@ -11,6 +11,7 @@ $script_modules = array(
   'sched-data',
   'speaker-data',
   'schedule-display',
+  'popup-search',
 );
 
 // Add type="module" to scripts
@@ -45,6 +46,7 @@ function appia_load_block_assets() {
     'scriptData', 
     array(
       'pluginUrl' => plugin_dir_url( __FILE__ ) . '../',
+      'siteUrl' => site_url(),
     ) 
   );
   wp_localize_script( 
@@ -52,7 +54,18 @@ function appia_load_block_assets() {
     'scriptData', 
     array(
       'pluginUrl' => plugin_dir_url( __FILE__ ) . '../',
+      'siteUrl' => site_url(),
     ) 
+  );
+  $nonce = wp_create_nonce( 'wp_rest' );
+  wp_localize_script(
+    'appia-popup-search',
+    'scriptData',
+    array(
+      'pluginUrl' => plugin_dir_url( __FILE__ ) . '../',
+      'siteUrl' => site_url(),
+      'nonce' => $nonce,
+    )
   );
 
   wp_enqueue_style( 'dashicons' );

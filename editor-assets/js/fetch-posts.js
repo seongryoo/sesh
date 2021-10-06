@@ -1,4 +1,4 @@
-const { withSelect } = wp.data;
+const { withSelect, useSelect } = wp.data;
 const { apiFetch } = wp;
 
 export const fetchPosts = function(postType, varName) {
@@ -16,4 +16,14 @@ export const fetchPosts = function(postType, varName) {
       [varName]: posts,
     };
   });
+};
+export const refetch = (postType) => {
+  const posts = useSelect((select) => {
+    return select('core').getEntityRecords(
+        'postType',
+        postType,
+        queryArgs
+    );
+  }, []);
+  return posts;
 };

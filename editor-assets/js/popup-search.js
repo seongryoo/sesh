@@ -56,6 +56,7 @@ export const PopupSearch = ({
           onClick: (w) => {
             const e = w.nativeEvent;
             e.preventDefault();
+            setSearchTerm("");
             addSession(session);
             closeSelf();
           },

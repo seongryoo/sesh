@@ -1,20 +1,42 @@
 <?php
 
+$script_modules = array(
+  'guten-helpers',
+  'attr-helpers',
+  'ui-wrappers',
+  'fetch-posts',
+  'autocomplete-sessions',
+  'slot-form',
+  'sesh-data',
+  'sched-data',
+  'speaker-data',
+  'schedule-display',
+  'popup-search',
+);
+
+// Add type="module" to scripts
+function appia_scripts_to_modules( $tag, $handle, $src ) {
+  global $script_modules;
+  foreach( $script_modules as $module ) {
+    $the_handle = 'appia-' . $module;
+    if ( $the_handle == $handle ) {
+      return '<script type="module" src="' . esc_url( $src ) . '"></script>';
+    }
+  }
+  return $tag;
+}
+add_filter('script_loader_tag', 'appia_scripts_to_modules' , 10, 3);
+
 // Loading appia block assets (js files and administrative css)
 function appia_load_block_assets() {
-  $scripts = array(
-    'drag',
-    'sesh-data',
-    'sched-data',
-    'speaker-data',
-  );
+  global $script_modules;
   $wp_deps = array(
     'wp-blocks',
     'wp-i18n',
     'wp-editor',
     'wp-date',
   );
-  foreach( $scripts as $slug ) {
+  foreach( $script_modules as $slug ) {
     $script_name = 'appia-' . $slug;
     $url = plugin_dir_url( __FILE__ ) . '../editor-assets/js/' . $slug . '.js';
     wp_enqueue_script( $script_name, $url, $wp_deps );
@@ -24,6 +46,7 @@ function appia_load_block_assets() {
     'scriptData', 
     array(
       'pluginUrl' => plugin_dir_url( __FILE__ ) . '../',
+      'siteUrl' => site_url(),
     ) 
   );
   wp_localize_script( 
@@ -31,9 +54,21 @@ function appia_load_block_assets() {
     'scriptData', 
     array(
       'pluginUrl' => plugin_dir_url( __FILE__ ) . '../',
+      'siteUrl' => site_url(),
     ) 
   );
+  $nonce = wp_create_nonce( 'wp_rest' );
+  wp_localize_script(
+    'appia-popup-search',
+    'scriptData',
+    array(
+      'pluginUrl' => plugin_dir_url( __FILE__ ) . '../',
+      'siteUrl' => site_url(),
+      'nonce' => $nonce,
+    )
+  );
 
+  wp_enqueue_style( 'dashicons' );
   $styles = array(
     'admin',
     'schedule-admin',
@@ -43,7 +78,6 @@ function appia_load_block_assets() {
     $url = plugin_dir_url( __FILE__ ) . '../editor-assets/css/' . $slug . '.css';
     wp_enqueue_style( $style_name, $url );
   }
-  wp_enqueue_style( 'dashicons' );
 }
 add_action( 'enqueue_block_editor_assets', 'appia_load_block_assets' );
 

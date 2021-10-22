@@ -26,7 +26,7 @@ function appia_register_sched() {
     'public'                  => true,
     'menu_icon'               => 'dashicons-index-card',
     'show_in_rest'            => true,
-    'publicly_queryable'      => true,
+    'publicly_queryable'      => false,
     'rewrite'                 => array( 'slug' => 'schedule' ),
   );
 

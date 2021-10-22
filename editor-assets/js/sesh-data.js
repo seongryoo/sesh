@@ -1,60 +1,17 @@
-(function(wp, scriptData) {
-  const el = wp.element.createElement;
-  const registerBlock = wp.blocks.registerBlockType;
-  const TextControl = wp.components.TextControl;
-  const Button = wp.components.Button;
-  const apiFetch = wp.apiFetch;
-  const RichText = wp.blockEditor.RichText;
-  // Select function for db call
-  const withSelect = wp.data.withSelect;
-  const fetchSpeakers = withSelect(function(select) {
-    const queryArgs = {
-      per_page: 5,
-      offset: 0,
-      status: 'publish',
-    };
-    const posts = select('core').getEntityRecords(
-        'postType',
-        'post_speaker',
-        queryArgs
-    );
-    return {
-      speakers: posts,
-    };
-  });
-  const seshEdit = fetchSpeakers(function(props) {
-    if (!props.speakers) {
-      return 'Fetching speakers...';
-    }
-    if (props.speakers.length == 0) {
-      return 'Could not find any speakers to work with.'
-        + ' Make some speaker posts to get started!';
-    }
-    const getAttr = function(attr) {
-      if (props.attributes[attr] != '') {
-        const theString = props.attributes[attr];
-        try {
-          const theJSON = JSON.parse(theString);
-          return theJSON.data;
-        } catch (e) {
-          console.log('Empty data returned warning!');
-          return [];
-        }
-      } else {
-        const emptyArray = [];
-        return emptyArray;
-      }
-    };
-    // Helper method which stores JSON object as string attribute
-    const storeAttr = function(attr, value) {
-      const theJSON = {
-        data: value,
-      };
-      const theString = JSON.stringify(theJSON);
-      props.setAttributes({
-        [attr]: theString,
-      });
-    };
+import { el, registerBlock } from './guten-helpers.js';
+import { fetchPosts } from './fetch-posts.js';
+import { getAttr, storeAttr } from './attr-helpers.js';
+import { removeNoText } from './ui-wrappers.js';
+
+const {apiFetch} = wp;
+const {RichText} = wp.blockEditor;
+const {TextControl, Button} = wp.components;
+
+(function(scriptData) {
+  const seshEdit = fetchPosts('post_speaker', 'speakers')(function(props) {
+    let speakers;
+    const loadingSpeakers = 'Fetching speakers...';
+    const noSpeakers = 'Could not find any Speaker posts. Make some Speaker posts to add to this session!';
     // Helper method that generates appia field wrapper
     const elWrap = function(element, args, value) {
       let generatedElement;
@@ -122,9 +79,9 @@
           return value != '';
         },
         getOptionCompletion: function(speaker) {
-          const newSpeakers = getAttr('speakers');
+          const newSpeakers = getAttr(props, 'speakers');
           newSpeakers.push(speaker.id);
-          storeAttr('speakers', newSpeakers);
+          storeAttr(props, 'speakers', newSpeakers);
           return '';
         },
       },
@@ -147,22 +104,19 @@
         }
       }
     };
-    // Generic delete button text
-    const removeText = function(msg) {
-      return el(
-          'div',
-          {
-            'className': 'button-remove-text',
-            'aria-label': msg,
-          },
-          ''
-      );
-    };
     const drawSpeakers = function() {
-      const speakersObj = getAttr('speakers');
+      const speakersObj = getAttr(props, 'speakers');
       const renderArr = [];
+      if (!props.speakers || props.speakers && props.speakers.length == 0) {
+        return null;
+      }
       for (const [speakerIndex, speakerId] of speakersObj.entries()) {
         const speaker = getSpeakerById(speakerId);
+        if (speaker == undefined) {
+          speakersObj.splice(speakerIndex, 1);
+          storeAttr(props, 'speakers', speakersObj);
+          continue;
+        }
         const speakerName = el(
             'p',
             {},
@@ -173,11 +127,11 @@
             {
               onClick: function() {
                 speakersObj.splice(speakerIndex, 1);
-                storeAttr('speakers', speakersObj);
+                storeAttr(props, 'speakers', speakersObj);
               },
               className: 'speaker-remove',
             },
-            removeText('Remove the speaker '
+            removeNoText('Remove the speaker '
               + speaker.title.rendered
               + ' from the session')
         );
@@ -214,11 +168,18 @@
         {},
         drawSpeakers()
     );
-    const speakers = elWrap(
+    const speakerSearch = elWrap(
         'div',
         {},
         [speakerAutocomplete, chosenSpeakers]
     );
+    if (!props.speakers) {
+      speakers = loadingSpeakers;
+    } else if (props.speakers.length == 0) {
+      speakers = noSpeakers;
+    } else {
+      speakers = speakerSearch;
+    }
     // Session link
     const linkArgs = {
       onChange: function(value) {

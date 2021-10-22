@@ -1,182 +1,158 @@
-body.post-type-post_sched .wp-block {
-  max-width: 992px;
+.wp-block {
+  max-width: none;
+  width: 100%;
+}
+.block-editor-block-list__layout {
+  top: 4rem;
+}
+.editor-post-title__input {
+  text-align: center;
+}
+.appia-blocks.schedule {
+  width: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen-Sans, Ubuntu, Cantarell, Helvetica Neue, sans-serif;
+  font-size: 16px;
 }
 
-.tracks-and-slots {
-    width: 100%;
+.appia-blocks label:nth-child(1) {
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+  display: block;
 }
-.slot {
-    position: relative;
+.appia-blocks .sched-text-input {
+  margin-bottom: 0.25rem;
 }
-.slot, .track {
-    display: flex;
-    width: 100%;
-    background: #b1dbff;
-    font-family: 'Segoe UI', sans-serif;
-}
-.button-remove-text:before {
-    content: "\f158";
-    font-family: 'dashicons';
-}
+/* Tracks */
 
-.button-add-text:before {
-    content: "\f502";
-    font-family: 'dashicons';
-}
-
-.sched-tracks .button-add {
-    margin-top: 0.25em;
-    margin-left: 0.5em;
-}
-
-.button-add,
-.button-remove {
-    flex: 0 0 auto;
-    padding: 0;
-}
-.button-add.add-before {
-    position: absolute;
-    display: block;
-    top: -2em;
-    left: 0;
-    right: 0;
-    margin: 0 auto;
-}
-.button-add .button-add-text,
-.button-remove .button-remove-text {
-    font-size: 2em;
-    line-height: 2em;
-}
-.button-remove {
-    opacity: 0.25;
-}
-.track:hover .button-remove,
-.slot-name:hover .button-remove {
-    opacity: 1;
-    color: crimson;
-}
-
-/* Tracks and tabs */
-.sched-tracks {
-    display: flex;
-    align-items: center;
-}
-.sched-tracks .button-add {
-    position: absolute;
-    right: 0;
-}
 .tracks-container {
-    display: flex;
-    width: 100%;
-    padding: 0 1em;
+  display: flex;
+  width: 100%;
 }
-.tracks-container:nth-child(1):before {
-    content: '';
-    display: block;
-    flex: 1 0 25%;
-}
+
 .track {
-    padding: 0.5em 1em 0 1em;
-    border-top-left-radius: 1em;
-    border-top-right-radius: 1em;
-    margin-right: 1em;
-    display: flex;
-    justify-content: space-between;
+  padding: 1rem;
+  flex: 1;
+  border-left: 1px solid rgba(60, 67, 74, 0.2);
 }
-.track input[type="text"] {
-    font-size: 1em;
-    border: none;
-    background: none;
-    color: black;
-}
+
 
 /* Slots */
-.slot-name {
-    display: flex;
-    flex: 1 0 25%;
-    align-items: center;
-    flex-direction: column;
-    padding-right: 1em;
-}
-.slot-name-delete {
-    display: flex;
-}
-.slot-children {
-    width: 100%;
-    display: flex;
-}
-.slot-child {
-    width: 100%;
-    display: block;
-    padding: 1em;
-    margin-right: 1em;
-    background: white;
-}
 
 .slot {
-    padding: 1em;
-    border-bottom: 1px solid gray;
-}
-.slot-name input[type="text"] {
-    font-size: 1em;
-    border: none;
-    background: none;
+  display: flex;
+  border-top: 1px solid rgba(60, 67, 74, 0.6);
 }
 
-.sidebar-sessions {
-    padding: 0.5em;
-    font-family: 'Segoe UI', sans-serif;
-    flex: 0 1 25%;
-}
-.session {
-    padding: 0.5em;
-    background: #b4ded0;
-    margin: 1em 0;
-    cursor: grab;
-}
-.session-name {
-    display: flex;
-    align-items: center;
-}
-.session-name:before {
-    content: "\f545";
-    font-family: 'dashicons';
-    margin-right: 0.5em;
-    display: block;
-    flex: 0 1 auto;
+.slot-name-delete {
+  display: flex;
 }
 
-.schedule {
-    display: flex;
+.slot-name {
+  margin: 0 0 2rem 0;
+  width: 25%;
+  padding: 1rem;
 }
 
-/* Pretty forms */
-.sched-editable input[type="text"] {
-    border: 4px solid #0000000f;
-    color: #666666;
-    box-sizing: content-box;
+button .dashicon {
+  margin-right: 0.5rem;
+}
+button.button-remove:hover {
+  color: #ba0000;
+}
+button.button-remove:focus:not(:disabled) {
+  box-shadow: 0 0 0 2px #ba0000;
 }
 
-.sched-editable input[type="text"]:focus {
-    border: 4px solid #1989c1;
-    color: black;
-    box-shadow: none;
+.day .slot-name {
+  margin: 2em auto;
+  width: 50%;
 }
 
-.sched-editable input[type="text"]::placeholder {
-    color: rgba(0, 0, 0, 0.54);
-}
-/* Drag and drop shenanigans */
-
-/* Draggable */
-.session.dragging {
-    opacity: 0.5;
+.slot-children {
+  display: flex;
+  width: 75%;
 }
 
-/* Drop zone*/
-.no-pointer .dropzone * {
-    pointer-events: none;
+.slot-child {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 1em;
+  border-left: 1px solid rgba(60, 67, 74, 0.25);
 }
-.dropzone-entered {
-    background: red;
+
+.stored-session {
+  padding: 0.5rem 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 1rem;
+}
+
+.stored-session button {
+  margin-right: -12px;
+}
+
+.stored-session button .dashicon {
+  margin-right: 0;
+}
+
+.slot .stored-session > p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+}
+
+
+/* Add button */
+
+/* Text input */
+.tracks-and-slots .components-base-control__field {
+  font-size: 16px;
+  margin-bottom: 0;
+}
+
+.sched-text-input {
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.tracks-and-slots .sched-text-input input {
+  font-size: 16px;
+  background: #eaeaea;
+  border: none;
+  padding: 0.75em 0.5em;
+}
+
+.tracks-and-slots .sched-text-input input:focus {
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+
+.sched-text-input input ~ .sched-input-underline {
+  width: 0%;
+  height: 2px;
+  margin: 0 auto;
+  display: block;
+  background: blue;
+  transition: width 0.2s;
+}
+
+.sched-text-input input:focus ~ .sched-input-underline {
+  width: 100%;
+}
+
+.visually-hidden {
+  clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%); /* browsers in the future */
+  height: 1px; 
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
 }

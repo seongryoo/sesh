@@ -58,15 +58,17 @@ function appia_speaker_data_block_render( $attributes ) {
 
   $markup .= '<div class="appia-speaker">';
 
+    $markup .= '<h2 class="appia-speaker-name">' . $name . '</h2>';
+    if ( $role != '' ) {
+      $markup .= '<div class="appia-speaker-role">';
+        $markup .= $role;
+      $markup .= '</div>';
+    }
+    
     if ( $img_url != '' ) {
       $markup .= '<img src="' . $img_url . '" aria-label="' . $name . '" class="appia-speaker-image">';
     }
 
-    if ( $role != '' ) {
-      $markup .= '<div class="appia-speaker-role>';
-        $markup .= $role;
-      $markup .= '</div>';
-    }
 
     if ( $link != '' ) {
       $markup .= '<a href="' . esc_url( $link ) . '" aria-label="Open website of ' . $name . '" class="appia-speaker-site">';

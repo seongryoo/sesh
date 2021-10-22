@@ -1,20 +1,25 @@
-.schedule-container {
+table {
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;
 }
-.tracks-container {
-    display: flex;
-    width: 100%;
+
+th, td {
+  padding: 20px 0;
 }
-.track-offset,
-.track {
-    flex: 1;
+
+.session-speaker a {
+  display: flex;
+  align-items: center;
 }
-.slot {
-    display: flex;
+
+.session-speaker p {
+  margin: 0;
 }
-.slot-dropzone,
-.slot-name {
-    flex: 1;
-}
-.slot-dropzone.slot-shared {
-    flex: 3;
+
+.session-speaker .speaker-img img {
+  width: 64px;
+  height: 64px;
+  border-radius: 32px;
+  margin-right: 16px;
 }
